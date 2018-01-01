@@ -1,5 +1,45 @@
 {
   "extends": [
-    "@fov/eslint-config-fov"
-  ]
+    "eslint:recommended",
+    "airbnb"
+  ],
+  "plugins": [
+    "json",
+    "async-await",
+    "import"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  },
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "max-len": [
+      "warn",
+      120
+    ],
+    "comma-dangle": [
+      "warn",
+      "always-multiline"
+    ],
+    "no-unused-vars": "warn",
+    "import/prefer-default-export": "off",
+    "no-console": "off",
+    "func-names": "off",
+    "curly": [
+      "error",
+      "all"
+    ],
+    "space-before-function-paren": [
+      "warn",
+      {
+        "anonymous": "never",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ]
+  }
 }

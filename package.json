@@ -14,7 +14,7 @@
     "deploy:staging-with-this-node_modules": "npm run build:with-this-node_modules && npm run package && ./bin/deploy --config scripts/deploy/lambdastaging.config.js --package dist/package.zip",
     "deploy:staging": "npm run build && npm run package && ./bin/deploy --config scripts/deploy/lambdastaging.config.js --package dist/package.zip",
     "deploy:production": "npm run test && npm run build && npm run package && ./bin/deploy --config scripts/deploy/lambdaprod.config.js --package dist/package.zip",
-    "lint": "eslint --fix --quiet --ext .jsx,.js,.json,.html .",
+    "lint": "./node_modules/.bin/eslint --fix --quiet --ext .jsx,.js,.json,.html .",
     "test-if-in-master-or-production-branch": "if [ `git rev-parse --abbrev-ref HEAD` == \"master\" ]; then npm run test ; elif [ `git rev-parse --abbrev-ref HEAD` == \"production\" ]; then npm run test ; fi"
   },
   "pre-commit": [],
@@ -34,7 +34,6 @@
     "request-promise": "^4.2.1"
   },
   "devDependencies": {
-    "@fov/eslint-config-fov": "^0.0.4",
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.1.1",
@@ -45,6 +44,13 @@
     "babel-preset-stage-1": "^6.24.1",
     "babel-register": "^6.23.0",
     "chai": "^3.5.0",
+    "eslint": "^4.14.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-async-await": "0.0.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-json": "^1.2.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.5.1",
     "lambda-tester": "^3.1.0",
     "mocha": "^3.2.0",
     "node-aws-lambda": "^0.1.8",
