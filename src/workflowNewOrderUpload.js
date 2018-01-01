@@ -1,5 +1,5 @@
 import moment from 'moment-timezone';
-import { Slack } from './util/slack';
+import { slack } from './util/slack';
 import { convertShopifyOrdersToWolanskiStructure } from './wolanski/shopifyToWolanski';
 import { FileCreator } from './wolanski/fileCreator';
 import { WolanskiFtp } from './wolanski/ftp';
@@ -39,13 +39,14 @@ export class WorkflowNewOrderUpload {
     await this.queryOrders();
     await this.convertOrdersToWolanskiCsv();
     await this.uploadCsvToFtp();
-    Slack.log('Orders are successfully transmitted to Wolanski');
+    slack.log('Orders are successfully transmitted to Wolanski');
   }
 
   async trigger(event) {
     if (TimeKeeper.isTimeForFullfillmentUpload() || event.forceExecution) {
       console.log('executing Wolanski workflow');
       await this.executeWorkflow();
+      await slack.getActivePromise();
     } else {
       console.log(`it is not time for a fulfillment upload: ${TimeKeeper.getLocalTime().format()}`);
     }
@@ -55,7 +56,7 @@ export class WorkflowNewOrderUpload {
     try {
       return await this.trigger(event);
     } catch (err) {
-      Slack.error(err);
+      slack.error(err);
       console.log(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
       throw err;
     }
