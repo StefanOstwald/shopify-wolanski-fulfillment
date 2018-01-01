@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Slack } from '../util/slack';
+import { slack } from '../util/slack';
 
 export function getEmptyOrder() {
   const base = {
@@ -76,13 +76,14 @@ export function convertShopifyOrdersToWolanskiStructure(shopifyOrders) {
   const wolanski = shopifyOrders.map((sOrder, orderIndex) => {
     if (!sOrder.shipping_address) {
       ordersWithErrors += 1;
-      Slack.error(`shopify Order contains no sOrder.shipping_address: \`\`\` \n${JSON.stringify(sOrder, null, 2)}\n \`\`\``);
+      slack.error(`shopify Order contains no sOrder.shipping_address: \`\`\` \n${JSON.stringify(sOrder, null, 2)}\n \`\`\``);
       console.log(`sOrder no sOrder.shipping_address: ${JSON.stringify(sOrder, null, 2)} `);
     } else {
       const wolanskiOrderIndex = (orderIndex + 1) - ordersWithErrors;
       return generateWolanskiOrderFromShopifyOrder(sOrder, wolanskiOrderIndex);
     }
   });
+
   return wolanski;
 }
 

@@ -9,12 +9,10 @@ import { Shopify } from './shopify/shopify';
 require('dotenv').config();
 
 export class WorkflowNewOrderUpload {
-
   async queryOrders() {
     try {
       const shopify = new Shopify();
-      this.shopifyOrders = await shopify.getOrdersInTimespane(
-        TimeKeeper.previousTimeIntervallStart(), TimeKeeper.previousTimeIntervallEnd());
+      this.shopifyOrders = await shopify.getOrdersInTimespane(TimeKeeper.previousTimeIntervallStart(), TimeKeeper.previousTimeIntervallEnd());
       console.log(`this.shopifyOrders: ${JSON.stringify(this.shopifyOrders, null, 2)}`);
     } catch (err) {
       console.log(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
@@ -31,7 +29,6 @@ export class WorkflowNewOrderUpload {
 
   uploadCsvToFtp() {
     const ftp = new WolanskiFtp();
-    console.log(`this.csvName: ${JSON.stringify(this.csvName, null, 2)}`);
     return ftp.uploadOrders(this.csvFile, this.csvName);
   }
 

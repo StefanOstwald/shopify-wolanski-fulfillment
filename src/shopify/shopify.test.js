@@ -23,7 +23,7 @@ describe('shopify orders', () => {
       const res2 = await rp(customer);
       console.log(`orders: ${JSON.stringify(res2, null, 2)}`);
       const wolanskiOrder = convertShopifyOrdersToWolanskiStructure(res2.orders);
-      console.log(`wolanskiOrder: ${  JSON.stringify(wolanskiOrder, null, 2)}`);
+      console.log(`wolanskiOrder: ${JSON.stringify(wolanskiOrder, null, 2)}`);
     } catch (err) {
       console.log(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
     }

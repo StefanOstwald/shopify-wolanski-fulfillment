@@ -1,3 +1,5 @@
+import { describe, it } from 'mocha';
+
 const LambdaTester = require('lambda-tester');
 const assert = require('assert');
 

@@ -40,5 +40,4 @@ export class TimeKeeper {
       .hour(orderDeadlineHour)
       .minute(orderDeadlineMinute);
   }
-
 }

@@ -1,16 +1,36 @@
 import rp from 'request-promise';
 
-export class Slack {
-  static log(txt) {
-    console.log(`log: ${JSON.stringify(txt, null, 2)}`);
-    const url = process.env.SLACK_NOTIFICATION_URL;
-    return Slack.postTextToSlackUrlSafely(txt, url);
+class Slack {
+  constructor() {
+    this.queries = [];
   }
 
-  static error(txt) {
+  log(txt) {
+    console.log(`log: ${JSON.stringify(txt, null, 2)}`);
+    const url = Slack.getNotificationUrl();
+    const request = Slack.postTextToSlackUrlSafely(txt, url);
+    this.queries.push(request);
+    return request;
+  }
+
+  static getNotificationUrl() {
+    return process.env.SLACK_NOTIFICATION_URL;
+  }
+
+  error(txt) {
     console.log(`error: ${JSON.stringify(txt, null, 2)}`);
-    const url = process.env.SLACK_ERROR_URL;
-    return Slack.postTextToSlackUrlSafely(txt, url);
+    const url = Slack.getErrorUrl();
+    const request = Slack.postTextToSlackUrlSafely(txt, url);
+    this.queries.push(request);
+    return request;
+  }
+
+  static getErrorUrl() {
+    return process.env.SLACK_ERROR_URL;
+  }
+
+  getActivePromise() {
+    return Promise.all(this.queries);
   }
 
   static postTextToSlackUrlSafely(txt, url) {
@@ -37,3 +57,5 @@ export class Slack {
     return rp(options);
   }
 }
+
+export const slack = new Slack();
