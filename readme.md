@@ -5,6 +5,9 @@ This tool gets the orders of the last day from shopify prepares the file format 
 The env variables can be used via a .env file. An example setting is provided in .env-example. To get started with the default setting rename .env-example to .env and replace the variables with your own settings.
 > rn ./.env-example ./.env
 
+### Express Delivery
+Wolanski offer express delivery (T_Bemerkung1). In order to offer it via Shopify you can create an express delivery shipping rate. The name of the express delivery shipping rate has to entered as the env variable SHOPIFY_EXPRESS_DELIVERY_NAME. If the delivery is selected, the comment ## Express Versands ## is added to T_Bemerkung1.
+
 ### Lambda
 This working is prepared to be deployed on AWS Lambda
 
