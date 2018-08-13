@@ -1,5 +1,5 @@
 {
-  "name": "innovatory-fulfillment",
+  "name": "shopify-fulfillment-for-wolanski",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
@@ -11,15 +11,12 @@
     "postbuild:npm-install": "cd dist && npm install --production && cd ..",
     "postbuild:copy-node_modules-without-sub-node_modules": "rsync -av -L node_modules ./dist --exclude=node_modules/**/node_modules --exclude=*.git",
     "package": "cd dist && zip -r package.zip . && cd ..",
-    "deploy:staging-with-this-node_modules": "npm run build:with-this-node_modules && npm run package && ./bin/deploy --config scripts/deploy/lambdastaging.config.js --package dist/package.zip",
-    "deploy:staging": "npm run build && npm run package && ./bin/deploy --config scripts/deploy/lambdastaging.config.js --package dist/package.zip",
-    "deploy:production": "npm run test && npm run build && npm run package && ./bin/deploy --config scripts/deploy/lambdaprod.config.js --package dist/package.zip",
+    "deploy": "npm run test && npm run build && npm run package && ./bin/deploy --config scripts/deploy/lambdaprod.config.js --package dist/package.zip",
     "lint": "./node_modules/.bin/eslint --fix --quiet --ext .jsx,.js,.json,.html .",
-    "test-if-in-master-or-production-branch": "if [ `git rev-parse --abbrev-ref HEAD` == \"master\" ]; then npm run test ; elif [ `git rev-parse --abbrev-ref HEAD` == \"production\" ]; then npm run test ; fi"
   },
   "pre-commit": [],
   "author": "Stefan Ostwald",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "babel-runtime": "^6.23.0",
     "bluebird": "^3.4.7",
@@ -57,7 +54,6 @@
     "nomnom": "^1.8.1",
     "pre-commit": "^1.2.2",
     "sinon": "^3.2.1",
-    "sinon-test": "^2.1.0",
-    "uuid": "^3.0.1"
+    "sinon-test": "^2.1.0"
   }
 }
