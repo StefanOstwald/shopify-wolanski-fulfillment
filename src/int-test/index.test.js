@@ -1,19 +1,17 @@
 import { describe, it } from 'mocha';
-
-const LambdaTester = require('lambda-tester');
-const assert = require('assert');
-
-const myHandler = require('../src/index').handler;
+import { assert } from 'chai';
+import LambdaTester from 'lambda-tester';
+import { handler } from '../index';
 
 describe('lambda call', () => {
   it('doesnt brake on launch request', function() {
     const event = { forceExecution: true };
 
     this.timeout(5000);
-    LambdaTester(myHandler)
+    LambdaTester(handler)
       .event(event)
       .expectSucceed((result) => {
-        console.log(`result: ${JSON.stringify(result, null, 2)}`);
+        assert.isUndefined(result, JSON.stringify(result, null, 2));
       });
   });
 });

@@ -4,15 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha **/**.test.js --compilers js:babel-core/register --require babel-polyfill",
-    "build": "mkdir -p dist && babel src -d ./dist --ignore .test.js && npm run postbuild:copy-files && npm run postbuild:npm-install",
+    "test": "mocha src/**/*.test.js --compilers js:babel-core/register --require babel-polyfill",
+    "build": "rm -rf ./dist && mkdir -p dist && babel src -d ./dist --ignore .test.js && npm run postbuild:copy-files && npm run postbuild:npm-install",
     "build:with-this-node_modules": "mkdir -p dist && babel src -d ./dist --ignore .test.js && npm run postbuild:copy-node_modules-without-sub-node_modules",
-    "postbuild:copy-files": "rsync -av package.json ./dist && rsync -av package-lock.json ./dist && rsync -av .env ./dist",
+    "postbuild:copy-files": "rsync -av package.json ./dist && rsync -av package-lock.json ./dist",
     "postbuild:npm-install": "cd dist && npm install --production && cd ..",
     "postbuild:copy-node_modules-without-sub-node_modules": "rsync -av -L node_modules ./dist --exclude=node_modules/**/node_modules --exclude=*.git",
     "package": "cd dist && zip -r package.zip . && cd ..",
     "deploy": "npm run test && npm run build && npm run package && ./bin/deploy --config scripts/deploy/lambdaprod.config.js --package dist/package.zip",
-    "lint": "./node_modules/.bin/eslint --fix --quiet --ext .jsx,.js,.json,.html .",
+    "lint": "./node_modules/.bin/eslint --fix --quiet --ext .jsx,.js,.json,.html ."
+  },
+  "engines": {
+    "node": ">=8.10"
   },
   "pre-commit": [],
   "author": "Stefan Ostwald",

@@ -39,7 +39,7 @@ export function getEmptyOrder() {
     Reserve: '',
   };
 
-  for (let i = 0; i < 25; i++) {
+  for (let i = 0; i < 25; i += 1) {
     base[`T_Artikel ${i}`] = '';
     base[`T_Menge ${i}`] = '';
   }
@@ -105,4 +105,3 @@ export function convertShopifyOrdersToWolanskiStructure(shopifyOrders) {
 
   return wolanski;
 }
-

@@ -3,10 +3,10 @@ import { describe, it } from 'mocha';
 import sinonTestFactory from 'sinon-test';
 import sinon from 'sinon';
 
-import { TimeKeeper } from './util/timeKeeper';
-import { FileCreator } from './wolanski/fileCreator';
+import { TimeKeeper } from '../util/timeKeeper';
+import { FileCreator } from '../wolanski/fileCreator';
 import { WorkflowNewOrderUpload } from './workflowNewOrderUpload';
-import { Shopify } from './shopify/shopify';
+import { Shopify } from '../shopify';
 
 require('dotenv').config();
 

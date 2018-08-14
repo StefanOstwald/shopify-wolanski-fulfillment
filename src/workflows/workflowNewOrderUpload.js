@@ -1,10 +1,9 @@
-import moment from 'moment-timezone';
-import { slack } from './util/slack';
-import { convertShopifyOrdersToWolanskiStructure } from './wolanski/shopifyToWolanski';
-import { FileCreator } from './wolanski/fileCreator';
-import { WolanskiFtp } from './wolanski/ftp';
-import { TimeKeeper } from './util/timeKeeper';
-import { Shopify } from './shopify/shopify';
+import { slack } from '../util/slack';
+import { convertShopifyOrdersToWolanskiStructure } from '../wolanski/shopifyToWolanski';
+import { FileCreator } from '../wolanski/fileCreator';
+import { WolanskiFtp } from '../wolanski/ftp';
+import { TimeKeeper } from '../util/timeKeeper';
+import { Shopify } from '../shopify';
 
 require('dotenv').config();
 

@@ -1,4 +1,4 @@
-import { WorkflowNewOrderUpload } from './workflowNewOrderUpload';
+import { WorkflowNewOrderUpload } from './workflows/workflowNewOrderUpload';
 
 exports.handler = function(event, context) {
   const workflow = new WorkflowNewOrderUpload();
