@@ -29,7 +29,11 @@ export class Shopify {
     } catch (err) {
       console.log(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
     }
-    console.log(`res: ${JSON.stringify(res, null, 2)}`);
+
+    const shopifyContainsOrderArray = Array.isArray(res.orders);
+    console.log(`Shopify result contains order array: ${shopifyContainsOrderArray}`);
+    if (shopifyContainsOrderArray) console.log(`Shopify contains ${res.orders.length} orders`);
+
     return res;
   }
 
@@ -40,7 +44,6 @@ export class Shopify {
    */
   async getOrdersInTimespane(startDate, endDate) {
     const apiReturn = await this.excuteQueryOrdersInTimespane(startDate, endDate);
-    console.log(`apiReturn: ${JSON.stringify(apiReturn, null, 2)}`);
     return apiReturn.orders;
   }
 }

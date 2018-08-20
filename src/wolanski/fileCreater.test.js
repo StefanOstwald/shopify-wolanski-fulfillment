@@ -1,11 +1,19 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 import { FileCreator } from './fileCreator';
+import { getEmptyOrder } from './shopifyToWolanski';
 
 describe('fileCreater', () => {
   it('has decently verfied file name', async () => {
     console.log(`FileCreater.genFileName(): ${JSON.stringify(FileCreator.genFileName(), null, 2)}`);
     assert.notEqual(FileCreator.genFileName(), '1970-01-01-T-01-00-00.csv');
+  });
+
+  describe('createCsvFileFromArray', () => {
+    it('does not use double quotes', () => {
+      const csv = FileCreator.createCsvFileFromArray(getEmptyOrder());
+      assert.isNotTrue(csv.includes('"'));
+    });
   });
 
   describe('replaceDelimiterInAllStringsWithReplacer', () => {

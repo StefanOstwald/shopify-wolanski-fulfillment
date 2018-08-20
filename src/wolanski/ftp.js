@@ -1,4 +1,5 @@
-import PromiseFtp from 'promise-ftp';
+import basicFtp from 'basic-ftp';
+import stringToStream from 'string-to-stream';
 
 export class WolanskiFtp {
   constructor(
@@ -14,7 +15,7 @@ export class WolanskiFtp {
     this.pw = pw;
     this.rootPath = rootPath;
 
-    this.ftp = new PromiseFtp();
+    this.ftp = new basicFtp.Client();
   }
 
 
@@ -25,18 +26,23 @@ export class WolanskiFtp {
   }
 
   async connect() {
-    const serverMessage = await this.ftp.connect({
-      host: this.host, port: this.port, user: this.user, password: this.pw, secure: true
+    const serverMessage = await this.ftp.access({
+      host: this.host, 
+      port: Number.parseInt(this.port), 
+      user: this.user, 
+      password: this.pw, 
+      secure: true,
     });
     return serverMessage;
   }
 
-  uploadFile(file, filename) {
+  uploadFile(fileString, filename) {
     const filePath = this.rootPath + filename;
-    return this.ftp.put(file, filePath);
+    const fileStream = stringToStream(fileString);
+    return this.ftp.upload(fileStream, filePath);
   }
 
   disconnect() {
-    return this.ftp.end();
+    return this.ftp.close();
   }
 }

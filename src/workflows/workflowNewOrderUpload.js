@@ -12,7 +12,7 @@ export class WorkflowNewOrderUpload {
     try {
       const shopify = new Shopify();
       this.shopifyOrders = await shopify.getOrdersInTimespane(TimeKeeper.previousTimeIntervallStart(), TimeKeeper.previousTimeIntervallEnd());
-      console.log(`this.shopifyOrders: ${JSON.stringify(this.shopifyOrders, null, 2)}`);
+      console.log(`this.shopifyOrders count: ${this.shopifyOrders.length}`);
     } catch (err) {
       console.log(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
     }
