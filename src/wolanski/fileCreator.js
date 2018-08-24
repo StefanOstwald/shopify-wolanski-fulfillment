@@ -6,6 +6,7 @@ import { TimeKeeper } from '../util/timeKeeper';
 export class FileCreator {
   static createCsvFileFromArray(csvArray) {
     const delimiter = ';';
+    const csvArrayWithoutDelimiter = FileCreator.replaceDelimiterInAllStringsWithReplacer(csvArray, delimiter);
     const emptyOrder = getEmptyOrder();
     emptyOrder['aaaaaaäöüaaaaaa'] = 'aaaaaaäöüaaaaaa';
     const fields = _.keys(emptyOrder);
@@ -21,19 +22,20 @@ export class FileCreator {
   }
 
   static replaceDelimiterInAllStringsWithReplacer(obj, delimiter = ';', replacer = ' ') {
-    Object.keys(obj).forEach((key) => {
-      if (typeof obj[key] === 'string') {
-        obj[key] = obj[key].replace(delimiter, replacer);
+    const cleanObj = Object.assign({}, obj);
+    Object.keys(cleanObj).forEach((key) => {
+      if (typeof cleanObj[key] === 'string') {
+        cleanObj[key] = cleanObj[key].replace(delimiter, replacer);
         return;
       }
 
-      const valueContainsSubattributes = typeof obj[key] === 'object' && Object.keys(obj[key]).length > 0;
+      const valueContainsSubattributes = typeof cleanObj[key] === 'object' && Object.keys(cleanObj[key]).length > 0;
       if (valueContainsSubattributes) {
-        obj[key] = FileCreator.replaceDelimiterInAllStringsWithReplacer(obj[key], delimiter, replacer);
+        cleanObj[key] = FileCreator.replaceDelimiterInAllStringsWithReplacer(cleanObj[key], delimiter, replacer);
       }
     });
 
-    return obj;
+    return cleanObj;
   }
 }
 

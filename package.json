@@ -25,6 +25,7 @@
     "basic-ftp": "^2.13.2",
     "bluebird": "^3.4.7",
     "dotenv": "^4.0.0",
+    "encoding": "^0.1.12",
     "i18next": "^8.2.1",
     "iconv": "^2.3.0",
     "iconv-lite": "^0.4.24",

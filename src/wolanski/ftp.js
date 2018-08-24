@@ -1,5 +1,6 @@
 import basicFtp from 'basic-ftp';
 import stringToStream from 'string-to-stream';
+import { Readable } from 'stream';
 
 export class WolanskiFtp {
   constructor(
@@ -27,10 +28,10 @@ export class WolanskiFtp {
 
   async connect() {
     const serverMessage = await this.ftp.access({
-      host: this.host, 
-      port: Number.parseInt(this.port), 
-      user: this.user, 
-      password: this.pw, 
+      host: this.host,
+      port: Number.parseInt(this.port),
+      user: this.user,
+      password: this.pw,
       secure: true,
     });
     return serverMessage;
@@ -38,7 +39,12 @@ export class WolanskiFtp {
 
   uploadFile(fileString, filename) {
     const filePath = this.rootPath + filename;
-    const fileStream = stringToStream(fileString);
+    // const fileStream = stringToStream(fileString);
+    const fileStream = new Readable();
+    fileStream._read = () => {}; // needed for node compatibility
+    fileStream.push('sß eur€ ?? aä AÄ oö OÖ uü UÜ add@ anführungszeichn" bindestrich- punkt. strichpunkt; doppelpunkt:');
+    fileStream.push(null);
+    fileStream.setEncoding('latin1');
     return this.ftp.upload(fileStream, filePath);
   }
 
