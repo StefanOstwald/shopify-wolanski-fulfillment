@@ -22,20 +22,19 @@ export class FileCreator {
   }
 
   static replaceDelimiterInAllStringsWithReplacer(obj, delimiter = ';', replacer = ' ') {
-    const cleanObj = Object.assign({}, obj);
-    Object.keys(cleanObj).forEach((key) => {
-      if (typeof cleanObj[key] === 'string') {
-        cleanObj[key] = cleanObj[key].replace(delimiter, replacer);
+    Object.keys(obj).forEach((key) => {
+      if (typeof obj[key] === 'string') {
+        obj[key] = obj[key].replace(delimiter, replacer);
         return;
       }
 
-      const valueContainsSubattributes = typeof cleanObj[key] === 'object' && Object.keys(cleanObj[key]).length > 0;
+      const valueContainsSubattributes = typeof obj[key] === 'object' && Object.keys(obj[key]).length > 0;
       if (valueContainsSubattributes) {
-        cleanObj[key] = FileCreator.replaceDelimiterInAllStringsWithReplacer(cleanObj[key], delimiter, replacer);
+        obj[key] = FileCreator.replaceDelimiterInAllStringsWithReplacer(obj[key], delimiter, replacer);
       }
     });
 
-    return cleanObj;
+    return obj;
   }
 }
 

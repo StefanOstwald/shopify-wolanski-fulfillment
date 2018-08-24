@@ -12,13 +12,8 @@ describe('fileCreater', () => {
   describe('createCsvFileFromArray', () => {
     it('does not use double quotes', () => {
       const order = getEmptyOrder();
-      order.T_Bemerkung2 = 'äüöÄÜÖß!!!';
       const csv = FileCreator.createCsvFileFromArray(order);
-      console.log(`csv: ${JSON.stringify(csv, null, 2)}`);
       assert.isNotTrue(csv.includes('"'));
-      assert.isNotTrue(csv.includes('ä'));
-      assert.isNotTrue(csv.includes('Ä'));
-      assert.isNotTrue(csv.includes('ß'));
     });
   });
 
