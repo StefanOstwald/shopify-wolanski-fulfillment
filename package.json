@@ -26,6 +26,8 @@
     "bluebird": "^3.4.7",
     "dotenv": "^4.0.0",
     "i18next": "^8.2.1",
+    "iconv": "^2.3.0",
+    "iconv-lite": "^0.4.24",
     "json2csv": "^3.11.2",
     "lodash": "^4.17.4",
     "moment-timezone": "^0.5.13",
@@ -33,7 +35,9 @@
     "request": "^2.80.0",
     "request-debug": "^0.2.0",
     "request-promise": "^4.2.1",
+    "str-encode": "^1.0.5",
     "string-to-stream": "^1.1.1",
+    "text-encoding": "^0.6.4",
     "windows-1252": "^1.0.0"
   },
   "devDependencies": {
@@ -56,6 +60,7 @@
     "eslint-plugin-react": "^7.5.1",
     "lambda-tester": "^3.1.0",
     "mocha": "^5.2.0",
+    "node-aws-lambda": "^0.1.8",
     "nomnom": "^1.8.1",
     "pre-commit": "^1.2.2",
     "sinon": "^6.1.5",

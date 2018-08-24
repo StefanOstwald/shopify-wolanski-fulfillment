@@ -35,7 +35,7 @@ class Slack {
 
   static postTextToSlackUrlSafely(txt, url) {
     if (!url) {
-      console.log('SLACK ERROR: not sending as slack env var is not set');
+      console.log(`SLACK ERROR: not sending as slack env var is not set. Msg for Slack: ${txt}`);
     } else {
       try {
         return Slack.postTextToSlackUrl(txt, url);

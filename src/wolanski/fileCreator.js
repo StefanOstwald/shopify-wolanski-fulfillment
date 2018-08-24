@@ -1,18 +1,17 @@
-import moment from 'moment-timezone';
 import json2csv from 'json2csv';
 import _ from 'lodash';
 import { getEmptyOrder } from './shopifyToWolanski';
 import { TimeKeeper } from '../util/timeKeeper';
-import windows1252 from 'windows-1252';
 
 export class FileCreator {
   static createCsvFileFromArray(csvArray) {
     const delimiter = ';';
-    const fields = _.keys(getEmptyOrder());
-    const encodedFields = convertArrayToLatin(fields);
-    const encodedCsvArray = convertArrayToLatin(csvArray);
+    const emptyOrder = getEmptyOrder();
+    emptyOrder['aaaaaaäöüaaaaaa'] = 'aaaaaaäöüaaaaaa';
+    const fields = _.keys(emptyOrder);
+    // const fields = _.keys(getEmptyOrder());
     const file = json2csv({
-      data: encodedCsvArray, fields: encodedFields, del: delimiter, quotes: '',
+      data: csvArray, fields, del: delimiter, quotes: '',
     });
     return file;
   }
@@ -38,13 +37,3 @@ export class FileCreator {
   }
 }
 
-
-function convertArrayToLatin(arr) {
-  return (Array.isArray(arr)) ? arr.map(convertStringToLatin) : arr;
-}
-
-function convertStringToLatin(str) {
-  return windows1252.encode(str, {
-    'mode': 'html'
-  })
-}

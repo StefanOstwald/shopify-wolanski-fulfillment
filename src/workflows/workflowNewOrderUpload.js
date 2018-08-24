@@ -4,6 +4,7 @@ import { FileCreator } from '../wolanski/fileCreator';
 import { WolanskiFtp } from '../wolanski/ftp';
 import { TimeKeeper } from '../util/timeKeeper';
 import { Shopify } from '../shopify';
+import { encodeInLatin } from '../util/latinEncoding';
 
 require('dotenv').config();
 
@@ -26,6 +27,10 @@ export class WorkflowNewOrderUpload {
     console.log(`this.csvName : ${JSON.stringify(this.csvName, null, 2)}`);
   }
 
+  convertToLatinEncoding() {
+    this.csvFile = encodeInLatin(this.csvFile);
+  }
+
   uploadCsvToFtp() {
     const ftp = new WolanskiFtp();
     return ftp.uploadOrders(this.csvFile, this.csvName);
@@ -34,6 +39,7 @@ export class WorkflowNewOrderUpload {
   async executeWorkflow() {
     await this.queryOrders();
     await this.convertOrdersToWolanskiCsv();
+    // this.convertToLatinEncoding();
     await this.uploadCsvToFtp();
     slack.log('Orders are successfully transmitted to Wolanski');
   }
