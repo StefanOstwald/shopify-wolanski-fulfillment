@@ -1,6 +1,7 @@
 import basicFtp from 'basic-ftp';
 import stringToStream from 'string-to-stream';
 import { Readable } from 'stream';
+import fs from 'fs';
 
 export class WolanskiFtp {
   constructor(
@@ -40,11 +41,14 @@ export class WolanskiFtp {
   uploadFile(fileString, filename) {
     const filePath = this.rootPath + filename;
     // const fileStream = stringToStream(fileString);
-    const fileStream = new Readable();
-    fileStream._read = () => {}; // needed for node compatibility
-    fileStream.push('sß eur€ ?? aä AÄ oö OÖ uü UÜ add@ anführungszeichn" bindestrich- punkt. strichpunkt; doppelpunkt:');
-    fileStream.push(null);
-    fileStream.setEncoding('latin1');
+
+    const fileStream = fs.createReadStream('./latestExport-latin1.csv');
+
+    // const fileStream = new Readable();
+    // fileStream._read = () => {}; // needed for node compatibility
+    // fileStream.push(fileString);
+    // fileStream.push(null);
+    // fileStream.setEncoding('latin1');
     return this.ftp.upload(fileStream, filePath);
   }
 

@@ -32,7 +32,9 @@ export class Shopify {
 
     const shopifyContainsOrderArray = Array.isArray(res.orders);
     console.log(`Shopify result contains order array: ${shopifyContainsOrderArray}`);
-    if (shopifyContainsOrderArray) console.log(`Shopify contains ${res.orders.length} orders`);
+    if (shopifyContainsOrderArray) {
+      console.log(`Shopify contains ${res.orders.length} orders`);
+    }
 
     return res;
   }

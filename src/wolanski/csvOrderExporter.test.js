@@ -1,18 +1,20 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
-import { FileCreator } from './fileCreator';
+import { CsvOrderExporter } from './csvOrderExporter';
 import { getEmptyOrder } from './shopifyToWolanski';
 
-describe('fileCreater', () => {
+describe('CsvOrderExporter', () => {
   it('has decently verfied file name', async () => {
-    console.log(`FileCreater.genFileName(): ${JSON.stringify(FileCreator.genFileName(), null, 2)}`);
-    assert.notEqual(FileCreator.genFileName(), '1970-01-01-T-01-00-00.csv');
+    console.log(`CsvOrderExporter.genFileName(): ${JSON.stringify(CsvOrderExporter.genFileName(), null, 2)}`);
+    assert.notEqual(CsvOrderExporter.genFileName(), '1970-01-01-T-01-00-00.csv');
   });
 
   describe('createCsvFileFromArray', () => {
     it('does not use double quotes', () => {
       const order = getEmptyOrder();
-      const csv = FileCreator.createCsvFileFromArray(order);
+      const exporter = new CsvOrderExporter();
+      exporter.orders = order;
+      const csv = exporter.genCsv();
       assert.isNotTrue(csv.includes('"'));
     });
   });
@@ -25,7 +27,7 @@ describe('fileCreater', () => {
       const input = {
         dat: new Date(0),
       };
-      assert.deepEqual(FileCreator.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), input);
+      assert.deepEqual(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), input);
     });
 
     it('replaces nested objects', () => {
@@ -45,7 +47,7 @@ describe('fileCreater', () => {
           },
         },
       };
-      assert.deepEqual(FileCreator.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), output);
+      assert.deepEqual(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), output);
     });
 
     it('replaces objects in arrays', () => {
@@ -67,7 +69,7 @@ describe('fileCreater', () => {
           }],
         },
       };
-      assert.deepEqual(FileCreator.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), output);
+      assert.deepEqual(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), output);
     });
 
     it('replaces objects string arrays', () => {
@@ -81,7 +83,7 @@ describe('fileCreater', () => {
           arr: ['arr-a'],
         },
       };
-      assert.deepEqual(FileCreator.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), output);
+      assert.deepEqual(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), output);
     });
   });
 });

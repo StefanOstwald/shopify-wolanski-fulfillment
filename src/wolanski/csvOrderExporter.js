@@ -3,16 +3,25 @@ import _ from 'lodash';
 import { getEmptyOrder } from './shopifyToWolanski';
 import { TimeKeeper } from '../util/timeKeeper';
 
-export class FileCreator {
-  static createCsvFileFromArray(csvArray) {
-    const delimiter = ';';
-    const csvArrayWithoutDelimiter = FileCreator.replaceDelimiterInAllStringsWithReplacer(csvArray, delimiter);
-    const emptyOrder = getEmptyOrder();
-    emptyOrder['aaaaaaäöüaaaaaa'] = 'aaaaaaäöüaaaaaa';
-    const fields = _.keys(emptyOrder);
-    // const fields = _.keys(getEmptyOrder());
+export class CsvOrderExporter {
+  constructor() {
+    this.orders = [];
+    this.delimiter = ';';
+    this.delimiterInStringReplacer = ' ';
+  }
+
+  addWolanskiOrder(order) {
+
+  }
+
+  removeDelimiterFromCsvStrings() {
+    this.orders = CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(this.orders, this.delimiter, this.delimiterInStringReplacer);
+  }
+
+  genCsv() {
+    const fields = Object.keys(getEmptyOrder());
     const file = json2csv({
-      data: csvArray, fields, del: delimiter, quotes: '',
+      data: this.orders, fields, del: this.delimiter, quotes: '',
     });
     return file;
   }
@@ -30,7 +39,7 @@ export class FileCreator {
 
       const valueContainsSubattributes = typeof obj[key] === 'object' && Object.keys(obj[key]).length > 0;
       if (valueContainsSubattributes) {
-        obj[key] = FileCreator.replaceDelimiterInAllStringsWithReplacer(obj[key], delimiter, replacer);
+        obj[key] = CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(obj[key], delimiter, replacer);
       }
     });
 
