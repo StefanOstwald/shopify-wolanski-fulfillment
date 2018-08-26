@@ -1,17 +1,15 @@
-
-
 import moment from 'moment-timezone';
-import { TimeKeeper } from './orderUpload.timeKeeper';
+import { OrderUploadTimeKeeper } from './orderUpload.timeKeeper';
 
 require('dotenv').config();
 
 describe('timeKeeper', () => {
   test('previousTimeIntervallEnd', async () => {
-    console.log(`previousTimeIntervallEnd:${console.log(new TimeKeeper().previousTimeIntervallEnd())}`);
+    console.log(`previousTimeIntervallEnd:${console.log(new OrderUploadTimeKeeper().previousTimeIntervallEnd())}`);
   });
 
   test('previousTimeIntervallStart', async () => {
-    console.log(`previousTimeIntervallEnd:${console.log(new TimeKeeper().previousTimeIntervallStart())}`);
+    console.log(`previousTimeIntervallEnd:${console.log(new OrderUploadTimeKeeper().previousTimeIntervallStart())}`);
   });
 
   test('moment works with timezone like in the example', () => {

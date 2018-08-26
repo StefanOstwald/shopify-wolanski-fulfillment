@@ -3,12 +3,19 @@ import { Shopify } from '.';
 
 require('dotenv').config();
 
-describe('shopify orders', () => {
-  test('can be colected', async () => {
+describe('shopify', () => {
+  test('orders can be colected', async () => {
     const now = moment();
     const shopify = new Shopify();
     const orders = await shopify.getOrdersInTimespane(now, now);
     expect(Array.isArray(orders)).toBeTruthy();
     expect(orders.length).toEqual(0);
+  });
+
+  test('get LocationId', async () => {
+    const shopify = new Shopify();
+    const path = '/admin/locations.json';
+    const locations = await shopify.get(path);
+    console.log(`locations: ${JSON.stringify(locations, null, 2)}`);
   });
 });

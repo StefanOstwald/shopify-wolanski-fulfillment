@@ -5,11 +5,13 @@ export class Shopify {
     key = process.env.SHOPIFY_READ_KEY,
     pw = process.env.SHOPIFY_READ_PW,
     baseUrl = process.env.SHOPIFY_BASE_URL,
-    informTracking = process.env.TRACKING_INFORM_CUSTOMER_ABOUT_TRACKING_INFO
+    informTracking = process.env.TRACKING_INFORM_CUSTOMER_ABOUT_TRACKING_INFO,
+    locationId = process.env.SHOPIFY_LOCATION_ID
   ) {
     this.key = key;
     this.pw = pw;
     this.baseUrl = baseUrl;
+    this.locationId = locationId ? parseInt(locationId, 10) : undefined;
 
     this.informCustomerAboutTracking =
       !!((!!informTracking && informTracking.toLowerCase() === 'true'));
@@ -64,7 +66,7 @@ export class Shopify {
   async addTrackingToOrder({ shopifyOrderId, trackingUrl, trackingNumber }) {
     const body = {
       fulfillment: {
-        location_id: 905684977,
+        location_id: await this.getLocationId(),
         tracking_number: trackingNumber,
         tracking_urls: [trackingUrl],
         notify_customer: this.informCustomerAboutTracking,
@@ -72,5 +74,23 @@ export class Shopify {
     };
     const path = `/admin/orders/${shopifyOrderId}/fulfillments.json`;
     return this.post(path, null, body);
+  }
+
+  async getLocationId() {
+    if (!this.locationId) {
+      this.locationId = await this.getFirstLocationId();
+    }
+    return this.locationId;
+  }
+
+  async getFirstLocationId() {
+    const path = '/admin/locations.json';
+    const res = await this.get(path);
+
+    if (!Array.isArray(res.locations) || res.locations.length === 0) {
+      throw Error('Locations query result does not contain any location');
+    }
+
+    return res.locations[0].id;
   }
 }
