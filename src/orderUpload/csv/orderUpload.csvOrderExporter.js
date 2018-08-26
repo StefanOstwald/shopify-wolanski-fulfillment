@@ -1,6 +1,6 @@
 import json2csv from 'json2csv';
 import { getLocalTime } from '../../util/timeHelper';
-import { getEmptyOrder } from '../shopify/orderUpload.shopifyToWolanski';
+import { getEmptyOrder } from './orderUpload.shopifyToWolanski';
 
 export class CsvOrderExporter {
   constructor() {

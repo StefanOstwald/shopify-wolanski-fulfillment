@@ -1,12 +1,12 @@
 import fs from 'fs';
 import { slack } from '../../util/slack';
-import { convertShopifyOrdersToWolanskiStructure, getEmptyOrder } from '../shopify/orderUpload.shopifyToWolanski';
+import { convertShopifyOrdersToWolanskiStructure, getEmptyOrder } from '../csv/orderUpload.shopifyToWolanski';
 import { CsvOrderExporter } from '../csv/orderUpload.csvOrderExporter';
 import { WolanskiFtp } from '../../util/ftp';
-import { TimeKeeper } from '../timeKeeper/orderUpload.timeKeeper';
+import { OrderUploadTimeKeeper } from '../timeKeeper/orderUpload.timeKeeper';
 import { encodeInLatin } from '../../util/latinEncoding';
-import { getOrdersInTimespane } from '../shopify/orderUpload.shopify';
 import { getLocalTime } from '../../util/timeHelper';
+import { Shopify } from '../../shopify';
 
 require('dotenv').config();
 
@@ -30,8 +30,8 @@ export class WorkflowNewOrderUpload {
   }
 
   async trigger(event) {
-    if (new TimeKeeper().isTimeForFullfillmentUpload() || event.forceExecution) {
-      console.log('executing Wolanski workflow');
+    if (new OrderUploadTimeKeeper().isTimeForTask() || event.forceExecution) {
+      console.log('executing order fulfillment workflow');
       await this.executeWorkflow();
       await slack.getActivePromise();
     } else {
@@ -50,8 +50,9 @@ export class WorkflowNewOrderUpload {
   }
 
   async queryOrders() {
-    const timeKeeper = new TimeKeeper();
-    this.shopifyOrders = await getOrdersInTimespane(
+    const timeKeeper = new OrderUploadTimeKeeper();
+    const shopify = new Shopify();
+    this.shopifyOrders = await shopify.getOrdersInTimespane(
       timeKeeper.previousTimeIntervallStart(),
       timeKeeper.previousTimeIntervallEnd()
     );
@@ -76,9 +77,12 @@ export class WorkflowNewOrderUpload {
     this.csvFileData = encodeInLatin(this.csvFileData);
   }
 
-  uploadFileToFtp() {
+  async uploadFileToFtp() {
     const ftp = new WolanskiFtp();
-    return ftp.uploadOrders(this.csvFilePathOnDisk, this.csvNameOnFtp);
+    await ftp.connect();
+    const ftpRootPath = process.env.WOLANSKI_FTP_ORDER_UPLOAD_PATH || '/';
+    await ftp.uploadFile(this.csvFilePathOnDisk, ftpRootPath + this.csvNameOnFtp);
+    await ftp.disconnect();
   }
 
   writeCsvToFileOnDisk() {

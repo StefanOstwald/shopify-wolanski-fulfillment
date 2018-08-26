@@ -23,6 +23,7 @@
     "babel-runtime": "^6.23.0",
     "basic-ftp": "^2.13.2",
     "bluebird": "^3.4.7",
+    "csvtojson": "^2.0.8",
     "dotenv": "^4.0.0",
     "encoding": "^0.1.12",
     "https-proxy-agent": "^2.2.0",

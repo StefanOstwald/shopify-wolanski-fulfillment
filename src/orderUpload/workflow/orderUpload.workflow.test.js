@@ -1,10 +1,10 @@
 import { WorkflowNewOrderUpload } from './orderUpload.workflow';
-import { getEmptyOrder } from '../shopify/orderUpload.shopifyToWolanski';
+import { getEmptyOrder } from '../csv/orderUpload.shopifyToWolanski';
 
 require('dotenv').config();
 
 describe('workflow', () => {
-  test('runs when shopify returns orders', async () =>{
+  test('runs when shopify returns orders', async () => {
     const workflow = new WorkflowNewOrderUpload();
     await workflow.executeWorkflow();
   }, 10000);

@@ -7,22 +7,13 @@ export class WolanskiFtp {
     port = process.env.WOLANSKI_FTP_PORT,
     user = process.env.WOLANSKI_FTP_USER,
     pw = process.env.WOLANSKI_FTP_PW,
-    rootPath = process.env.WOLANSKI_FTP_ROOT_PATH
   ) {
     this.host = host;
     this.port = port;
     this.user = user;
     this.pw = pw;
-    this.rootPath = rootPath;
 
     this.ftp = new basicFtp.Client();
-  }
-
-
-  async uploadOrders(sourceFilePath, ftpFilename) {
-    await this.connect();
-    await this.uploadFile(sourceFilePath, ftpFilename);
-    await this.disconnect();
   }
 
   async connect() {
@@ -36,10 +27,20 @@ export class WolanskiFtp {
     return serverMessage;
   }
 
-  uploadFile(sourceFilePath, ftpFilename) {
-    const filePath = this.rootPath + ftpFilename;
-    const fileStream = fs.createReadStream(sourceFilePath);
-    return this.ftp.upload(fileStream, filePath);
+  uploadFile(diskFilePath, ftpFilePath) {
+    const fileStream = fs.createReadStream(diskFilePath);
+    return this.ftp.upload(fileStream, ftpFilePath);
+  }
+
+  downloadFile(diskFilePath, ftpFilePath) {
+    const fileStream = fs.createWriteStream(diskFilePath);
+    return this.ftp.download(fileStream, ftpFilePath);
+  }
+
+  async fileExists(folder, filename) {
+    await this.ftp.cd(folder);
+    const files = await this.ftp.list();
+    return !!files.find(fileInfo => fileInfo.name === filename);
   }
 
   disconnect() {

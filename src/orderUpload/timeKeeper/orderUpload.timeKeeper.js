@@ -1,6 +1,6 @@
 import { getLocalTime, isTimeForTask } from '../../util/timeHelper';
 
-export class TimeKeeper {
+export class OrderUploadTimeKeeper {
   constructor(targetUploadTimeHour, targetUploadTimeMinute, bufferTimeBeforeForLastOrderBeforeTargetExecutionTime) {
     this.targetUploadTimeHour = targetUploadTimeHour || process.env.ORDER_UPLOAD_EXECUTION_TIME_HOUR || 12;
     this.targetUploadTimeMin = targetUploadTimeMinute || process.env.ORDER_UPLOAD_EXECUTION_TIME_MIN || 0;
@@ -10,7 +10,7 @@ export class TimeKeeper {
       30;
   }
 
-  isTimeForFullfillmentUpload() {
+  isTimeForTask() {
     return isTimeForTask(this.targetUploadTimeHour, this.targetUploadTimeMin);
   }
 

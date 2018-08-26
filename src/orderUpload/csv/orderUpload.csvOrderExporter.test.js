@@ -1,5 +1,5 @@
 import { CsvOrderExporter } from './orderUpload.csvOrderExporter';
-import { getEmptyOrder } from '../shopify/orderUpload.shopifyToWolanski';
+import { getEmptyOrder } from './orderUpload.shopifyToWolanski';
 
 describe('CsvOrderExporter', () => {
   test('has decently verfied file name', async () => {
