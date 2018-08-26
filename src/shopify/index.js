@@ -1,51 +1,39 @@
 import rp from 'request-promise';
 
 export class Shopify {
-  constructor(key = process.env.SHOPIFY_READ_KEY, pw = process.env.SHOPIFY_READ_PW) {
+  constructor(key = process.env.SHOPIFY_READ_KEY, pw = process.env.SHOPIFY_READ_PW, baseUrl = process.env.SHOPIFY_BASE_URL) {
     this.key = key;
     this.pw = pw;
+    this.baseUrl = baseUrl;
   }
 
-  async excuteQueryOrdersInTimespane(startDate, endDate) {
-    console.log(`excuteQueryOrdersInTimespane startDate: ${startDate.format()}`);
-    console.log(`excuteQueryOrdersInTimespane endDate: ${endDate.format()}`);
+  static getRequestFramework() {
+    return rp;
+  }
+
+  query(method, path, qs, body) {
+    if (!path.startsWith('/')) { throw new Error('path needs to start with /'); }
 
     const options = {
-      method: 'GET',
+      method,
       auth: {
         user: this.key,
         pass: this.pw,
       },
-      qs: {
-        created_at_min: startDate.format(),
-        created_at_max: endDate.format(),
-      },
-      uri: 'https://innoki-shop.myshopify.com/admin/orders.json',
+      qs,
+      body,
+      uri: this.baseUrl + path,
       json: true, // Automatically parses the JSON string in the response
     };
-    let res;
-    try {
-      res = await rp(options);
-    } catch (err) {
-      console.log(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
-    }
 
-    const shopifyContainsOrderArray = Array.isArray(res.orders);
-    console.log(`Shopify result contains order array: ${shopifyContainsOrderArray}`);
-    if (shopifyContainsOrderArray) {
-      console.log(`Shopify contains ${res.orders.length} orders`);
-    }
-
-    return res;
+    return Shopify.getRequestFramework()(options);
   }
 
-  /**
-   *
-   * @param {moment} startDate type moment
-   * @param {moment} endDate type moment
-   */
-  async getOrdersInTimespane(startDate, endDate) {
-    const apiReturn = await this.excuteQueryOrdersInTimespane(startDate, endDate);
-    return apiReturn.orders;
+  get(path, queryParamter) {
+    return this.query('GET', path, queryParamter);
+  }
+
+  post(path, queryParamter, body) {
+    return this.query('POST', path, queryParamter, body);
   }
 }

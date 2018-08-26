@@ -14,7 +14,8 @@
   },
   "env": {
     "es6": true,
-    "node": true
+    "node": true,
+    "jest": true
   },
   "rules": {
     "max-len": [
@@ -27,6 +28,7 @@
     ],
     "no-unused-vars": "warn",
     "import/prefer-default-export": "off",
+    "no-param-reassign": "off",
     "no-console": "off",
     "func-names": "off",
     "curly": [
@@ -40,6 +42,7 @@
         "named": "never",
         "asyncArrow": "always"
       }
-    ]
+    ],
+  "no-use-before-define":"off"
   }
 }

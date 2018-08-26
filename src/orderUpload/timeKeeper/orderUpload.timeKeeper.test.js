@@ -1,27 +1,27 @@
-import { assert } from 'chai';
-import { describe, it } from 'mocha';
+
+
 import moment from 'moment-timezone';
-import { TimeKeeper } from './timeKeeper';
+import { TimeKeeper } from './orderUpload.timeKeeper';
 
 require('dotenv').config();
 
 describe('timeKeeper', () => {
-  it('previousTimeIntervallEnd', async () => {
-    console.log(`previousTimeIntervallEnd:${console.log(TimeKeeper.previousTimeIntervallEnd())}`);
+  test('previousTimeIntervallEnd', async () => {
+    console.log(`previousTimeIntervallEnd:${console.log(new TimeKeeper().previousTimeIntervallEnd())}`);
   });
 
-  it('previousTimeIntervallStart', async () => {
-    console.log(`previousTimeIntervallEnd:${console.log(TimeKeeper.previousTimeIntervallStart())}`);
+  test('previousTimeIntervallStart', async () => {
+    console.log(`previousTimeIntervallEnd:${console.log(new TimeKeeper().previousTimeIntervallStart())}`);
   });
 
-  it('moment works with timezone like in the example', () => {
+  test('moment works with timezone like in the example', () => {
     const june = moment('2014-06-01T12:00:00Z');
     console.log(june.tz('America/Los_Angeles').format('ha z')); // 5am PDT
     console.log(june.tz('America/New_York').format('ha z')); // 8am EDT
     console.log(june.tz('Europe/Berlin').format('ha z'));
   });
 
-  it('works from scratch', () => {
+  test('works from scratch', () => {
     const targetTime = moment()
       .tz('Europe/Berlin')
       .startOf('day')

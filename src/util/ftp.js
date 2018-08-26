@@ -1,6 +1,4 @@
 import basicFtp from 'basic-ftp';
-import stringToStream from 'string-to-stream';
-import { Readable } from 'stream';
 import fs from 'fs';
 
 export class WolanskiFtp {
@@ -21,16 +19,16 @@ export class WolanskiFtp {
   }
 
 
-  async uploadOrders(file, filename) {
+  async uploadOrders(sourceFilePath, ftpFilename) {
     await this.connect();
-    await this.uploadFile(file, filename);
+    await this.uploadFile(sourceFilePath, ftpFilename);
     await this.disconnect();
   }
 
   async connect() {
     const serverMessage = await this.ftp.access({
       host: this.host,
-      port: Number.parseInt(this.port),
+      port: Number.parseInt(this.port, 10),
       user: this.user,
       password: this.pw,
       secure: true,
@@ -38,17 +36,9 @@ export class WolanskiFtp {
     return serverMessage;
   }
 
-  uploadFile(fileString, filename) {
-    const filePath = this.rootPath + filename;
-    // const fileStream = stringToStream(fileString);
-
-    const fileStream = fs.createReadStream('./latestExport-latin1.csv');
-
-    // const fileStream = new Readable();
-    // fileStream._read = () => {}; // needed for node compatibility
-    // fileStream.push(fileString);
-    // fileStream.push(null);
-    // fileStream.setEncoding('latin1');
+  uploadFile(sourceFilePath, ftpFilename) {
+    const filePath = this.rootPath + ftpFilename;
+    const fileStream = fs.createReadStream(sourceFilePath);
     return this.ftp.upload(fileStream, filePath);
   }
 

@@ -1,7 +1,6 @@
 import json2csv from 'json2csv';
-import _ from 'lodash';
-import { getEmptyOrder } from './shopifyToWolanski';
-import { TimeKeeper } from '../util/timeKeeper';
+import { getLocalTime } from '../../util/timeHelper';
+import { getEmptyOrder } from '../shopify/orderUpload.shopifyToWolanski';
 
 export class CsvOrderExporter {
   constructor() {
@@ -10,12 +9,12 @@ export class CsvOrderExporter {
     this.delimiterInStringReplacer = ' ';
   }
 
-  addWolanskiOrder(order) {
-
-  }
-
   removeDelimiterFromCsvStrings() {
-    this.orders = CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(this.orders, this.delimiter, this.delimiterInStringReplacer);
+    this.orders = CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(
+      this.orders,
+      this.delimiter,
+      this.delimiterInStringReplacer
+    );
   }
 
   genCsv() {
@@ -27,7 +26,7 @@ export class CsvOrderExporter {
   }
 
   static genFileName() {
-    return `${TimeKeeper.getLocalTime().format('YYYY-MM-DD-T-HH-mm-ss')}.csv`;
+    return `${getLocalTime().format('YYYY-MM-DD-T-HH-mm-ss')}.csv`;
   }
 
   static replaceDelimiterInAllStringsWithReplacer(obj, delimiter = ';', replacer = ' ') {

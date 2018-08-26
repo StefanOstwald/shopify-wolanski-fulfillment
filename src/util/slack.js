@@ -33,12 +33,12 @@ class Slack {
     return Promise.all(this.queries);
   }
 
-  static postTextToSlackUrlSafely(txt, url) {
+  static async postTextToSlackUrlSafely(txt, url) {
     if (!url) {
       console.log(`SLACK ERROR: not sending as slack env var is not set. Msg for Slack: ${txt}`);
     } else {
       try {
-        return Slack.postTextToSlackUrl(txt, url);
+        await Slack.postTextToSlackUrl(txt, url);
       } catch (err) {
         console.log(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
       }
@@ -54,7 +54,11 @@ class Slack {
         text: txt,
       },
     };
-    return rp(options);
+    return Slack.getRequestModule()(options);
+  }
+
+  static getRequestModule() {
+    return rp;
   }
 }
 

@@ -1,23 +1,20 @@
-import { assert } from 'chai';
-import { describe, it } from 'mocha';
-import iconv from 'iconv-lite';
+import iconvLite from 'iconv-lite';
 import strEncode from 'str-encode';
 import { TextEncoder, TextDecoder } from 'text-encoding';
 import { Iconv } from 'iconv';
 import { Readable } from 'stream';
-import { encodeInLatin, convertStringToLatin } from './latinEncoding';
 import encoding from 'encoding';
 
 describe('string-util', () => {
-  it('converts utf8 to latin', async () => {
+  test('converts utf8 to latin', async () => {
     // const charsToCheck = [{ utf: 'ä', win1251: '' }];
     // ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', '?', 'ß'];
-    // assert.isFalse(encodeInLatin('ä'));
-    // assert.equal('ß'.charCodeAt(0).toString(16), 'df');
-    // assert.equal(convertStringToLatin('ß').charCodeAt(0).toString(16), 'df');
-    // assert.equal('ä'.charCodeAt(0).toString(16), 'e4');
+    // expect.isFalse(encodeInLatin('ä'));
+    // expect.equal('ß'.charCodeAt(0).toString(16), 'df');
+    // expect.equal(convertStringToLatin('ß').charCodeAt(0).toString(16), 'df');
+    // expect.equal('ä'.charCodeAt(0).toString(16), 'e4');
     // console.log(convertStringToLatin('ä'));
-    // assert.equal(convertStringToLatin('ä').charCodeAt(0).toString(10), 'df');
+    // expect.equal(convertStringToLatin('ä').charCodeAt(0).toString(10), 'df');
     await logEncoding('€');
     await logEncoding('ß');
     await logEncoding('ä');
@@ -47,12 +44,12 @@ describe('string-util', () => {
   }
 
   function encodingFct(char) {
-    const buffer = encoding.convert(char, 'Latin_1', 'UTF-8');
+    const buffer = encoding.convert(char, 'Latin_1', 'UTF-8', false);
     return buffer.toString('latin1');
   }
 
   function encodingFct2(char) {
-    const buffer = encoding.convert(char, 'Latin_1', 'UTF-8');
+    const buffer = encoding.convert(char, 'Latin_1', 'UTF-8', false);
     return buffer.toString();
   }
 
@@ -72,24 +69,25 @@ describe('string-util', () => {
   }
 
   function iconvLiteEncoding(char) {
-    const encoding = 'win1252';
-    return iconv.encode(char, encoding).toString();
+    const enc = 'win1252';
+    return iconvLite.encode(char, enc).toString();
   }
 
   function stringEncode(char) {
-    const encoding = 'latin1';
-    return strEncode(char, encoding);
+    const enc = 'latin1';
+    return strEncode(char, enc);
   }
 
   function textEncoding(char) {
-    const encoding = 'windows-1252';
+    const enc = 'windows-1252';
     const uint8array = new TextEncoder().encode(char);
-    return new TextDecoder(encoding).decode(uint8array);
+    return new TextDecoder(enc).decode(uint8array);
   }
 
   function nodeBufferEncoding(char) {
     return new Promise((resolve, reject) => {
       const readStream = new Readable();
+      // eslint-disable-next-line
       readStream._read = () => {}; // needed for node compatibility
       readStream.push(char);
       readStream.push(null);

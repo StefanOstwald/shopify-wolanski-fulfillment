@@ -1,21 +1,19 @@
-import { assert } from 'chai';
-import { describe, it } from 'mocha';
-import { CsvOrderExporter } from './csvOrderExporter';
-import { getEmptyOrder } from './shopifyToWolanski';
+import { CsvOrderExporter } from './orderUpload.csvOrderExporter';
+import { getEmptyOrder } from '../shopify/orderUpload.shopifyToWolanski';
 
 describe('CsvOrderExporter', () => {
-  it('has decently verfied file name', async () => {
+  test('has decently verfied file name', async () => {
     console.log(`CsvOrderExporter.genFileName(): ${JSON.stringify(CsvOrderExporter.genFileName(), null, 2)}`);
-    assert.notEqual(CsvOrderExporter.genFileName(), '1970-01-01-T-01-00-00.csv');
+    expect(CsvOrderExporter.genFileName()).not.toEqual('1970-01-01-T-01-00-00.csv');
   });
 
   describe('createCsvFileFromArray', () => {
-    it('does not use double quotes', () => {
+    test('does not use double quotes', () => {
       const order = getEmptyOrder();
       const exporter = new CsvOrderExporter();
       exporter.orders = order;
       const csv = exporter.genCsv();
-      assert.isNotTrue(csv.includes('"'));
+      expect(csv.includes('"')).toBeFalsy();
     });
   });
 
@@ -23,14 +21,14 @@ describe('CsvOrderExporter', () => {
     const delimiter = ';';
     const replacer = '-';
 
-    it('doesnt touch dates', () => {
+    test('doesnt touch dates', () => {
       const input = {
         dat: new Date(0),
       };
-      assert.deepEqual(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), input);
+      expect(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(input);
     });
 
-    it('replaces nested objects', () => {
+    test('replaces nested objects', () => {
       const input = {
         a: {
           b: {
@@ -47,10 +45,10 @@ describe('CsvOrderExporter', () => {
           },
         },
       };
-      assert.deepEqual(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), output);
+      expect(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(output);
     });
 
-    it('replaces objects in arrays', () => {
+    test('replaces objects in arrays', () => {
       const input = {
         a: {
           arr: [{
@@ -69,10 +67,10 @@ describe('CsvOrderExporter', () => {
           }],
         },
       };
-      assert.deepEqual(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), output);
+      expect(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(output);
     });
 
-    it('replaces objects string arrays', () => {
+    test('replaces objects string arrays', () => {
       const input = {
         a: {
           arr: ['arr;a'],
@@ -83,7 +81,7 @@ describe('CsvOrderExporter', () => {
           arr: ['arr-a'],
         },
       };
-      assert.deepEqual(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer), output);
+      expect(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(output);
     });
   });
 });

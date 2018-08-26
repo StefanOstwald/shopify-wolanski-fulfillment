@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha src/**/*.test.js --compilers js:babel-core/register --require babel-polyfill",
+    "test": "NODE_ENV=test jest",
     "build": "rm -rf ./dist && mkdir -p dist && babel src -d ./dist --ignore .test.js && npm run postbuild:copy-files && npm run postbuild:npm-install",
     "build:with-this-node_modules": "mkdir -p dist && babel src -d ./dist --ignore .test.js && npm run postbuild:copy-node_modules-without-sub-node_modules",
     "postbuild:copy-files": "rsync -av package.json ./dist && rsync -av package-lock.json ./dist",
@@ -17,7 +17,6 @@
   "engines": {
     "node": ">=8.10"
   },
-  "pre-commit": [],
   "author": "Stefan Ostwald",
   "license": "MIT",
   "dependencies": {
@@ -26,15 +25,16 @@
     "bluebird": "^3.4.7",
     "dotenv": "^4.0.0",
     "encoding": "^0.1.12",
+    "https-proxy-agent": "^2.2.0",
     "i18next": "^8.2.1",
     "iconv": "^2.3.0",
     "iconv-lite": "^0.4.24",
     "json2csv": "^3.11.2",
     "lodash": "^4.17.4",
+    "moment": "^2.22.2",
     "moment-timezone": "^0.5.13",
     "promise-ftp": "^1.3.3",
     "request": "^2.80.0",
-    "request-debug": "^0.2.0",
     "request-promise": "^4.2.1",
     "str-encode": "^1.0.5",
     "string-to-stream": "^1.1.1",
@@ -45,13 +45,13 @@
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.1.1",
+    "babel-jest": "^23.4.2",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-bluebird": "^1.0.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-1": "^6.24.1",
     "babel-register": "^6.23.0",
-    "chai": "^3.5.0",
     "eslint": "^4.14.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-async-await": "0.0.0",
@@ -59,12 +59,10 @@
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.5.1",
+    "jest": "^23.5.0",
     "lambda-tester": "^3.1.0",
-    "mocha": "^5.2.0",
     "node-aws-lambda": "^0.1.8",
     "nomnom": "^1.8.1",
-    "pre-commit": "^1.2.2",
-    "sinon": "^6.1.5",
-    "sinon-test": "^2.1.0"
+    "reflect-metadata": "^0.1.12"
   }
 }
