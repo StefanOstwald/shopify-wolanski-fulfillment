@@ -9,7 +9,7 @@ import { Shopify } from '../../shopify';
 
 require('dotenv').config();
 
-export class WorkflowNewOrderUpload {
+export class WorkflowTracking {
   constructor() {
     this.csvFilePathOnDisk = './csvExports/tracking-temp.csv';
     this.trackingFileExistsOnFtp = false;

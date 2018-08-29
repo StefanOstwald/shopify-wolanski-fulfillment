@@ -1,11 +1,12 @@
 import moment from 'moment-timezone';
 import { Shopify } from '.';
+import { getLocalTime } from '../util/timeHelper';
 
 require('dotenv').config();
 
 describe('shopify', () => {
   test('orders can be colected', async () => {
-    const now = moment();
+    const now = getLocalTime();
     const shopify = new Shopify();
     const orders = await shopify.getOrdersInTimespane(now, now);
     expect(Array.isArray(orders)).toBeTruthy();
