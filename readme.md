@@ -22,7 +22,7 @@ Node: 8.10
 Cloud Watch Events are the trigger for the lambda function. The cronjob is triggered twice each day. So both values of the daylight saving time are triggered. The software can figure out if it shall submit the new orders to the fulfillment. Lambda is using UTC+0 as time setting. This setting should have the same time as in the env varialbe TARGET_EXECUTION_TIME
 
 ```
-cron(5 10,11 * * ? *)
+cron(5 10,11,18,19 * * ? *)
 ```
 
 ### Deployment

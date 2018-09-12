@@ -7,13 +7,18 @@ import { getLocalTime } from '../../util/timeHelper';
 import { CsvTrackingParser } from '../csv/tracking.csvTrackingParser';
 import { Shopify } from '../../shopify';
 
-require('dotenv').config();
-
-export class WorkflowNewOrderUpload {
+export class WorkflowTracking {
   constructor() {
-    this.csvFilePathOnDisk = './csvExports/tracking-temp.csv';
+    this.csvFilePathOnDisk = WorkflowTracking.defaultCsvFilePath();
     this.trackingFileExistsOnFtp = false;
     this.trackingInfos = [];
+    this.trackingTimeKeeper = new TrackingTimeKeeper();
+    this.shopify = new Shopify();
+    this.ftp = new WolanskiFtp();
+  }
+
+  static defaultCsvFilePath() {
+    return './csvExports/tracking-temp.csv';
   }
 
   async executeWorkflow() {
@@ -29,7 +34,7 @@ export class WorkflowNewOrderUpload {
   }
 
   async trigger(event) {
-    if (new TrackingTimeKeeper().isTimeForTask() || event.forceExecution) {
+    if (this.trackingTimeKeeper.isTimeForTask() || event.forceExecution) {
       console.log('executing update tracking workflow');
       await this.executeWorkflow();
       await slack.getActivePromise();
@@ -38,18 +43,17 @@ export class WorkflowNewOrderUpload {
     }
   }
 
-  loadTrackingInfo() {
+  async loadTrackingInfo() {
     this.csvString = fs.readFileSync(this.csvFilePathOnDisk, { encoding: 'latin1' });
     const csvTrackingParser = new CsvTrackingParser();
-    csvTrackingParser.parseString(this.csvString);
+    await csvTrackingParser.parseString(this.csvString);
     this.trackingInfos = csvTrackingParser.getTrackingInfos();
   }
 
   async updateShopifyWithTrackingInfo() {
-    const shopify = new Shopify();
     const promises = [];
     this.trackingInfos.forEach((trackingInfo) => {
-      promises.push(shopify.addTrackingToOrder(trackingInfo));
+      promises.push(this.shopify.addTrackingToOrder(trackingInfo));
     });
     return Promise.all(promises);
   }
@@ -58,25 +62,23 @@ export class WorkflowNewOrderUpload {
     try {
       return await this.trigger(event);
     } catch (err) {
-      slack.error(err);
-      console.log(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
+      slack.error(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
       throw err;
     }
   }
 
   async downloadTrackingCsvFromFtp() {
-    const ftp = new WolanskiFtp();
-    await ftp.connect();
+    await this.ftp.connect();
 
     const ftpFolder = process.env.WOLANSKI_FTP_TRACKING_DOWNLOAD_PATH || '/';
     const csvFilenameOnFtp = getLocalTime().format('DD_MM_YYYY.csv');
 
-    this.trackingFileExistsOnFtp = await ftp.fileExists(ftpFolder);
+    this.trackingFileExistsOnFtp = await this.ftp.fileExists(ftpFolder);
     if (this.trackingFileExistsOnFtp) {
-      await ftp.downloadFile(this.csvFilePathOnDisk, ftpFolder + csvFilenameOnFtp);
+      await this.ftp.downloadFile(this.csvFilePathOnDisk, ftpFolder + csvFilenameOnFtp);
     }
 
-    await ftp.disconnect();
+    await this.ftp.disconnect();
   }
 
   deleteFileOnDisk() {
