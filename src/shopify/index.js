@@ -8,13 +8,26 @@ export class Shopify {
     informTracking = process.env.TRACKING_INFORM_CUSTOMER_ABOUT_TRACKING_INFO,
     locationId = process.env.SHOPIFY_LOCATION_ID
   ) {
+    // TODO add syntactic sugar
+    this.initWithProcessEnvValues(key, pw, baseUrl, informTracking, locationId);
+  }
+
+  initWithProcessEnvValues(
+    key = process.env.SHOPIFY_READ_KEY,
+    pw = process.env.SHOPIFY_READ_PW,
+    baseUrl = process.env.SHOPIFY_BASE_URL,
+    informTracking = process.env.TRACKING_INFORM_CUSTOMER_ABOUT_TRACKING_INFO,
+    locationId = process.env.SHOPIFY_LOCATION_ID
+  ) {
     this.key = key;
     this.pw = pw;
     this.baseUrl = baseUrl;
     this.locationId = locationId ? parseInt(locationId, 10) : undefined;
 
     this.informCustomerAboutTracking =
-      !!((!!informTracking && informTracking.toLowerCase() === 'true'));
+      (typeof informTracking === 'string')
+        ? informTracking.toLowerCase() === 'true'
+        : informTracking;
   }
 
   static getRequestFramework() {
@@ -56,6 +69,7 @@ export class Shopify {
     const queryParameter = {
       created_at_min: startDate.format(),
       created_at_max: endDate.format(),
+      status: 'open',
     };
     const path = '/admin/orders.json';
 
@@ -68,10 +82,12 @@ export class Shopify {
       fulfillment: {
         location_id: await this.getLocationId(),
         tracking_number: trackingNumber,
-        tracking_urls: [trackingUrl],
         notify_customer: this.informCustomerAboutTracking,
-      }
+      },
     };
+    if (trackingUrl) {
+      body.fulfillment.tracking_urls = [trackingUrl];
+    }
     const path = `/admin/orders/${shopifyOrderId}/fulfillments.json`;
     return this.post(path, null, body);
   }

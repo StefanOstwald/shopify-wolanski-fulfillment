@@ -8,8 +8,6 @@ import { encodeInLatin } from '../../util/latinEncoding';
 import { getLocalTime } from '../../util/timeHelper';
 import { Shopify } from '../../shopify';
 
-require('dotenv').config();
-
 export class WorkflowNewOrderUpload {
   constructor() {
     this.csvNameOnFtp = '';
@@ -43,8 +41,7 @@ export class WorkflowNewOrderUpload {
     try {
       return await this.trigger(event);
     } catch (err) {
-      slack.error(err);
-      console.log(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
+      slack.error(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
       throw err;
     }
   }
