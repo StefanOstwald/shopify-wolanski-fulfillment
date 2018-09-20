@@ -3,8 +3,8 @@ import { getEmptyOrder } from './orderUpload.shopifyToWolanski';
 
 describe('CsvOrderExporter', () => {
   test('has decently verfied file name', async () => {
-    console.log(`CsvOrderExporter.genFileName(): ${JSON.stringify(CsvOrderExporter.genFileName(), null, 2)}`);
-    expect(CsvOrderExporter.genFileName()).not.toEqual('1970-01-01-T-01-00-00.csv');
+    console.log(`CsvOrderExporter.genRemoteFileName(): ${JSON.stringify(CsvOrderExporter.genRemoteFileName(), null, 2)}`);
+    expect(CsvOrderExporter.genRemoteFileName()).not.toEqual('1970-01-01-T-01-00-00.csv');
   });
 
   describe('createCsvFileFromArray', () => {

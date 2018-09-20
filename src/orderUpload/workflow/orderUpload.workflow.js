@@ -4,7 +4,6 @@ import { convertShopifyOrdersToWolanskiStructure, getEmptyOrder } from '../csv/o
 import { CsvOrderExporter } from '../csv/orderUpload.csvOrderExporter';
 import { WolanskiFtp } from '../../util/ftp';
 import { OrderUploadTimeKeeper } from '../timeKeeper/orderUpload.timeKeeper';
-import { encodeInLatin } from '../../util/latinEncoding';
 import { getLocalTime } from '../../util/timeHelper';
 import { Shopify } from '../../shopify';
 
@@ -12,7 +11,7 @@ export class WorkflowNewOrderUpload {
   constructor() {
     this.csvNameOnFtp = '';
     this.csvFileData = '';
-    this.csvFilePathOnDisk = './csvExports/newOrders-temp.csv';
+    this.csvFilePathOnDisk = '/tmp/newOrders-temp.csv';
     this.wolanskiOrders = [];
     this.shopifyOrders = [];
   }
@@ -22,9 +21,16 @@ export class WorkflowNewOrderUpload {
     await this.convertOrdersToWolanskiStyleArray();
     await this.generateCsvFile();
     await this.writeCsvToFileOnDisk();
+    // TODO remove next line
+    await this.verifyFileExists();
+
     await this.uploadFileToFtp();
     await this.deleteFileOnDisk();
     slack.log('Orders are successfully transmitted to Wolanski');
+  }
+
+  async verifyFileExists() {
+    console.log(`filename ${this.csvFilePathOnDisk} exists: ${fs.existsSync(this.csvFilePathOnDisk)}`);
   }
 
   async trigger(event) {
@@ -65,13 +71,9 @@ export class WorkflowNewOrderUpload {
     csvOrderExporter.orders = this.wolanskiOrders;
     csvOrderExporter.removeDelimiterFromCsvStrings();
     this.csvFileData = csvOrderExporter.genCsv();
-    this.csvNameOnFtp = CsvOrderExporter.genFileName();
-    console.log(`FileCreater.genFileName();: ${JSON.stringify(CsvOrderExporter.genFileName(), null, 2)}`);
+    this.csvNameOnFtp = CsvOrderExporter.genRemoteFileName();
+    console.log(`FileCreater.genRemoteFileName();: ${JSON.stringify(CsvOrderExporter.genRemoteFileName(), null, 2)}`);
     console.log(`this.csvName : ${JSON.stringify(this.csvNameOnFtp, null, 2)}`);
-  }
-
-  convertToLatinEncoding() {
-    this.csvFileData = encodeInLatin(this.csvFileData);
   }
 
   async uploadFileToFtp() {

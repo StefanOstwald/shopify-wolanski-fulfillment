@@ -1,4 +1,3 @@
-import moment from 'moment';
 import fs from 'fs';
 import { slack } from '../../util/slack';
 import { WolanskiFtp } from '../../util/ftp';

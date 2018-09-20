@@ -25,7 +25,7 @@ export class CsvOrderExporter {
     return file;
   }
 
-  static genFileName() {
+  static genRemoteFileName() {
     return `${getLocalTime().format('YYYY-MM-DD-T-HH-mm-ss')}.csv`;
   }
 

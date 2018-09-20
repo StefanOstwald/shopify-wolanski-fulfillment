@@ -26,7 +26,7 @@ export class Shopify {
 
     this.informCustomerAboutTracking =
       (typeof informTracking === 'string')
-        ? informTracking.toLowerCase() === 'true'
+        ? informTracking.trim().toLowerCase() === 'true'
         : informTracking;
   }
 
