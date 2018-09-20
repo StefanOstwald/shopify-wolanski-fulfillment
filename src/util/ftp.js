@@ -13,6 +13,8 @@ export class WolanskiFtp {
     this.user = user;
     this.pw = pw;
 
+    // basicFtp doesn't allow Let's Encrypt certificates which Wolanski uses
+    this.rejectUnauthorized = false;
     this.ftp = new basicFtp.Client();
   }
 
@@ -23,6 +25,7 @@ export class WolanskiFtp {
       user: this.user,
       password: this.pw,
       secure: true,
+      secureOptions: { rejectUnauthorized: this.rejectUnauthorized },
     });
     return serverMessage;
   }
