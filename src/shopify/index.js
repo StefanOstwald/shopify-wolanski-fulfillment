@@ -2,8 +2,8 @@ import rp from 'request-promise';
 
 export class Shopify {
   constructor(
-    key = process.env.SHOPIFY_READ_KEY,
-    pw = process.env.SHOPIFY_READ_PW,
+    key = process.env.SHOPIFY_KEY,
+    pw = process.env.SHOPIFY_PW,
     baseUrl = process.env.SHOPIFY_BASE_URL,
     informTracking = process.env.TRACKING_INFORM_CUSTOMER_ABOUT_TRACKING_INFO,
     locationId = process.env.SHOPIFY_LOCATION_ID
@@ -13,8 +13,8 @@ export class Shopify {
   }
 
   initWithProcessEnvValues(
-    key = process.env.SHOPIFY_READ_KEY,
-    pw = process.env.SHOPIFY_READ_PW,
+    key = process.env.SHOPIFY_KEY,
+    pw = process.env.SHOPIFY_PW,
     baseUrl = process.env.SHOPIFY_BASE_URL,
     informTracking = process.env.TRACKING_INFORM_CUSTOMER_ABOUT_TRACKING_INFO,
     locationId = process.env.SHOPIFY_LOCATION_ID
