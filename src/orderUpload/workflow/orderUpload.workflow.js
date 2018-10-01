@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { slack } from '../../util/slack';
-import { convertShopifyOrdersToWolanskiStructure, getEmptyOrder } from '../csv/orderUpload.shopifyToWolanski';
+import { convertShopifyOrdersToWolanskiStructure } from '../csv/orderUpload.shopifyToWolanski';
 import { CsvOrderExporter } from '../csv/orderUpload.csvOrderExporter';
 import { WolanskiFtp } from '../../util/ftp';
 import { OrderUploadTimeKeeper } from '../timeKeeper/orderUpload.timeKeeper';
@@ -21,16 +21,9 @@ export class WorkflowNewOrderUpload {
     await this.convertOrdersToWolanskiStyleArray();
     await this.generateCsvFile();
     await this.writeCsvToFileOnDisk();
-    // TODO remove next line
-    await this.verifyFileExists();
-
     await this.uploadFileToFtp();
     await this.deleteFileOnDisk();
     slack.log('Orders are successfully transmitted to Wolanski');
-  }
-
-  async verifyFileExists() {
-    console.log(`filename ${this.csvFilePathOnDisk} exists: ${fs.existsSync(this.csvFilePathOnDisk)}`);
   }
 
   async trigger(event) {

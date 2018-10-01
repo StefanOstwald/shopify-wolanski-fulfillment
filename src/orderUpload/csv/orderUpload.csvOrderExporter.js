@@ -26,7 +26,7 @@ export class CsvOrderExporter {
   }
 
   static genRemoteFileName() {
-    return `${getLocalTime().format('YYYY-MM-DD-T-HH-mm-ss')}.csv`;
+    return `${getLocalTime().format('YYYY-MM-DD')}.csv`;
   }
 
   static replaceDelimiterInAllStringsWithReplacer(obj, delimiter = ';', replacer = ' ') {
