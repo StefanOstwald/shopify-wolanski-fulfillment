@@ -77,7 +77,7 @@ export class Shopify {
     return apiReturn.orders;
   }
 
-  async addTrackingToOrder({ shopifyOrderId, trackingUrl, trackingNumber }) {
+  async addFulfillmentToOrder({ shopifyOrderId, trackingUrl, trackingNumber }) {
     const body = {
       fulfillment: {
         location_id: await this.getLocationId(),

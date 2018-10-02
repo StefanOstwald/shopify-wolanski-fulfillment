@@ -1,4 +1,3 @@
-import moment from 'moment-timezone';
 import { Shopify } from '.';
 import { getLocalTime } from '../util/timeHelper';
 

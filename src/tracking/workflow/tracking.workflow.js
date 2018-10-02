@@ -17,7 +17,7 @@ export class WorkflowTracking {
   }
 
   static defaultCsvFilePath() {
-    return './csvExports/tracking-temp.csv';
+    return '/tmp/tracking-temp.csv';
   }
 
   async executeWorkflow() {
@@ -33,7 +33,7 @@ export class WorkflowTracking {
   }
 
   async trigger(event) {
-    if (this.trackingTimeKeeper.isTimeForTask() || event.forceExecution) {
+    if (this.trackingTimeKeeper.isTimeForTask() || event.forceExecutionTracking) {
       console.log('executing update tracking workflow');
       await this.executeWorkflow();
       await slack.getActivePromise();
@@ -44,6 +44,7 @@ export class WorkflowTracking {
 
   async loadTrackingInfo() {
     this.csvString = fs.readFileSync(this.csvFilePathOnDisk, { encoding: 'latin1' });
+    console.log('local tracking file loaded');
     const csvTrackingParser = new CsvTrackingParser();
     await csvTrackingParser.parseString(this.csvString);
     this.trackingInfos = csvTrackingParser.getTrackingInfos();
@@ -52,7 +53,7 @@ export class WorkflowTracking {
   async updateShopifyWithTrackingInfo() {
     const promises = [];
     this.trackingInfos.forEach((trackingInfo) => {
-      promises.push(this.shopify.addTrackingToOrder(trackingInfo));
+      promises.push(this.shopify.addFulfillmentToOrder(trackingInfo));
     });
     return Promise.all(promises);
   }
@@ -70,11 +71,11 @@ export class WorkflowTracking {
     await this.ftp.connect();
 
     const ftpFolder = process.env.WOLANSKI_FTP_TRACKING_DOWNLOAD_PATH || '/';
-    const csvFilenameOnFtp = getLocalTime().format('DD_MM_YYYY.csv');
+    const ftpFilename = `${getLocalTime().format('DD_MM_YYYY')}.csv`;
 
-    this.trackingFileExistsOnFtp = await this.ftp.fileExists(ftpFolder);
+    this.trackingFileExistsOnFtp = await this.ftp.fileExists(ftpFolder, ftpFilename);
     if (this.trackingFileExistsOnFtp) {
-      await this.ftp.downloadFile(this.csvFilePathOnDisk, ftpFolder + csvFilenameOnFtp);
+      await this.ftp.downloadFile(this.csvFilePathOnDisk, ftpFolder + ftpFilename);
     }
 
     await this.ftp.disconnect();

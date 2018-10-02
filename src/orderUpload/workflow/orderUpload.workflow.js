@@ -27,7 +27,7 @@ export class WorkflowNewOrderUpload {
   }
 
   async trigger(event) {
-    if (new OrderUploadTimeKeeper().isTimeForTask() || event.forceExecution) {
+    if (new OrderUploadTimeKeeper().isTimeForTask() || event.forceExecutionOrderUpload) {
       console.log('executing order fulfillment workflow');
       await this.executeWorkflow();
       await slack.getActivePromise();
