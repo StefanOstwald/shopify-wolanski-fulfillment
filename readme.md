@@ -11,11 +11,7 @@ The goal of this project is to use Wolanski as a fulfillment service for shopify
 * You have an AWS Credentials to deploy a lambda service
 
 ## Setup Lambda
-The service is designed to be hosted on AWS lambda. To get started create a lambda function.
-Memory: 320mb
-Timout: 30s
-Role: lambda\_basic\_execution
-Node: 8.10
+The service is designed to be hosted on AWS lambda. To get started create a lambda function: Memory: 320mb, Timout: 30s, Role: lambda\_basic\_execution, Node: 8.10
 
 Add all env variables from .env-example to the lambda service. A description of the env variables can be found in .env-example.
 
@@ -41,4 +37,4 @@ Once your .env file configured tests can be started via
 
 # Notes to self
 ## Express Delivery
-Wolanski offer express delivery (T_Bemerkung1). In order to offer it via Shopify you can create an express delivery shipping rate. The name of the express delivery shipping rate has to entered as the env variable SHOPIFY_EXPRESS_DELIVERY_NAME. If the delivery is selected, the comment ## Express Versands ## is added to T_Bemerkung1.
+Wolanski offer express delivery (T\_Bemerkung1). In order to offer it via Shopify you can create an express delivery shipping rate. The name of the express delivery shipping rate has to entered as the env variable SHOPIFY\_EXPRESS\_DELIVERY\_NAME. If the delivery is selected, the comment ## Express Versands ## is added to T\_Bemerkung1.
