@@ -52,7 +52,11 @@ export class WorkflowTracking {
 
   async updateShopifyWithTrackingInfo() {
     const promises = [];
-    this.trackingInfos.forEach((trackingInfo) => {
+    this.trackingInfos.forEach((trackingInfo, index) => {
+      if (!trackingInfo.shopifyOrderId) {
+        slack.error(`ShopifyOrder is missing in row ${index}. The order has not been updated.\ntrackingInfo: ${JSON.stringify(trackingInfo, null, 2)}`);
+        return;
+      }
       promises.push(this.shopify.addFulfillmentToOrder(trackingInfo));
     });
     return Promise.all(promises);
