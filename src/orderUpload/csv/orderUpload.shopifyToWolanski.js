@@ -4,9 +4,9 @@ import { slack } from '../../util/slack';
 export function getEmptyOrder() {
   const base = {
     // T_KontoNr Immer die selbe Nummer (Diese erhalten Sie von Ihren Sachbearbeiter)
-    T_KontoNr: 15854,
+    T_KontoNr: process.env.WOLANSKI_ACCOUNT_NUMBER,
     // T_FFNR Immer die selbe Nummer (Diese erhalten Sie von Ihren Sachbearbeiter)
-    T_FFNR: 223,
+    T_FFNR: process.env.WOLANSKI_FULFILLMENT_NUMBER,
     // LFD Nummer
     T_Nummer: 0,
     T_Name1: '',
