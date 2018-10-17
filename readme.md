@@ -34,6 +34,23 @@ For development a .env file can be used for all env varialbes. An example settin
 Once your .env file configured tests can be started via 
 > npm test
 
+## Test lambda
+To force an execution indepent of the time the following events are available
+
+### Force start of Workflow Tracking
+```JSON
+{
+  "forceExecutionTracking": true
+}
+```
+
+### Force start of Workflow Order Upload
+To force the workflow tracking to start this event is available:
+```JSON
+{
+  "forceExecutionOrderUpload": true
+}
+```
 
 # Notes to self
 ## Express Delivery
