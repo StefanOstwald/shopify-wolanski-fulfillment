@@ -20,7 +20,11 @@ export class CsvOrderExporter {
   genCsv() {
     const fields = Object.keys(getEmptyOrder());
     const file = json2csv({
-      data: this.orders, fields, del: this.delimiter, quotes: '',
+      data: this.orders,
+      fields,
+      del: this.delimiter,
+      quotes: '',
+      eol: '\r\n',
     });
     return file;
   }

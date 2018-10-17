@@ -23,7 +23,6 @@ export class WorkflowNewOrderUpload {
     await this.writeCsvToFileOnDisk();
     await this.uploadFileToFtp();
     await this.deleteFileOnDisk();
-    slack.log('Orders are successfully transmitted to Wolanski');
   }
 
   async trigger(event) {

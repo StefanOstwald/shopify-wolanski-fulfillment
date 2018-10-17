@@ -23,13 +23,12 @@ export class WorkflowTracking {
   async executeWorkflow() {
     await this.downloadTrackingCsvFromFtp();
     if (!this.trackingFileExistsOnFtp) {
-      slack.log('Tracking: No tracking information found for today');
+      console.log('Tracking: No tracking information found for today');
       return;
     }
     await this.loadTrackingInfo();
     await this.updateShopifyWithTrackingInfo();
     await this.deleteFileOnDisk();
-    slack.log('Tracking: Shopify is updated with tracking information from Wolanski');
   }
 
   async trigger(event) {
