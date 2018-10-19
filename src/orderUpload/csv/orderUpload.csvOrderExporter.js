@@ -10,7 +10,7 @@ export class CsvOrderExporter {
   }
 
   removeDelimiterFromCsvStrings() {
-    this.orders = CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(
+    this.orders = CsvOrderExporter.replaceUnallowedCharsInAllStringsWithReplacer(
       this.orders,
       this.delimiter,
       this.delimiterInStringReplacer
@@ -24,25 +24,27 @@ export class CsvOrderExporter {
       fields,
       del: this.delimiter,
       quotes: '',
-      eol: '\r\n',
     });
-    return file;
+
+    const fileWithWindowsEOL = file.replace(/\r\n|\r|\n/g, '\r\n');
+    return fileWithWindowsEOL;
   }
 
   static genRemoteFileName() {
     return `${getLocalTime().format('YYYY-MM-DD')}.csv`;
   }
 
-  static replaceDelimiterInAllStringsWithReplacer(obj, delimiter = ';', replacer = ' ') {
+  static replaceUnallowedCharsInAllStringsWithReplacer(obj, delimiter = ';', replacer = ' ') {
     Object.keys(obj).forEach((key) => {
       if (typeof obj[key] === 'string') {
         obj[key] = obj[key].replace(delimiter, replacer);
+        obj[key] = obj[key].replace(/\r\n|\r|\n/g, ' - ');
         return;
       }
 
       const valueContainsSubattributes = typeof obj[key] === 'object' && Object.keys(obj[key]).length > 0;
       if (valueContainsSubattributes) {
-        obj[key] = CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(obj[key], delimiter, replacer);
+        obj[key] = CsvOrderExporter.replaceUnallowedCharsInAllStringsWithReplacer(obj[key], delimiter, replacer);
       }
     });
 

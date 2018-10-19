@@ -55,3 +55,6 @@ To force the workflow tracking to start this event is available:
 # Notes to self
 ## Express Delivery
 Wolanski offer express delivery (T\_Bemerkung1). In order to offer it via Shopify you can create an express delivery shipping rate. The name of the express delivery shipping rate has to entered as the env variable SHOPIFY\_EXPRESS\_DELIVERY\_NAME. If the delivery is selected, the comment ## Express Versands ## is added to T\_Bemerkung1.
+
+## Show End of Line Token on Mac
+> od -t c 2018-10-19.csv

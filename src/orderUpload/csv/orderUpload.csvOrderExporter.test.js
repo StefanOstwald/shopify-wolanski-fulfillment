@@ -17,7 +17,7 @@ describe('CsvOrderExporter', () => {
     });
   });
 
-  describe('replaceDelimiterInAllStringsWithReplacer', () => {
+  describe('replaceUnallowedCharsInAllStringsWithReplacer', () => {
     const delimiter = ';';
     const replacer = '-';
 
@@ -25,7 +25,7 @@ describe('CsvOrderExporter', () => {
       const input = {
         dat: new Date(0),
       };
-      expect(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(input);
+      expect(CsvOrderExporter.replaceUnallowedCharsInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(input);
     });
 
     test('replaces nested objects', () => {
@@ -45,7 +45,7 @@ describe('CsvOrderExporter', () => {
           },
         },
       };
-      expect(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(output);
+      expect(CsvOrderExporter.replaceUnallowedCharsInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(output);
     });
 
     test('replaces objects in arrays', () => {
@@ -67,7 +67,7 @@ describe('CsvOrderExporter', () => {
           }],
         },
       };
-      expect(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(output);
+      expect(CsvOrderExporter.replaceUnallowedCharsInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(output);
     });
 
     test('replaces objects string arrays', () => {
@@ -81,7 +81,7 @@ describe('CsvOrderExporter', () => {
           arr: ['arr-a'],
         },
       };
-      expect(CsvOrderExporter.replaceDelimiterInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(output);
+      expect(CsvOrderExporter.replaceUnallowedCharsInAllStringsWithReplacer(input, delimiter, replacer)).toEqual(output);
     });
   });
 });
