@@ -14,15 +14,32 @@ export class WorkflowNewOrderUpload {
     this.csvFilePathOnDisk = '/tmp/newOrders-temp.csv';
     this.wolanskiOrders = [];
     this.shopifyOrders = [];
+    this.codeInCommentToNotFulfillOrder = process.env.removeOrderWhichAreFlaggedToBeSkipped || '#dnf#';
   }
 
   async executeWorkflow() {
     await this.queryOrders();
+    this.removeOrderWhichAreFlaggedToBeSkipped();
     await this.convertOrdersToWolanskiStyleArray();
     await this.generateCsvFile();
     await this.writeCsvToFileOnDisk();
     await this.uploadFileToFtp();
     await this.deleteFileOnDisk();
+  }
+
+  removeOrderWhichAreFlaggedToBeSkipped() {
+    const orderShallBeSkipped = (order) => {
+      const skipTag = this.codeInCommentToNotFulfillOrder.toLowerCase();
+      const orderNote = order.note.toLowerCase();
+      return typeof order.note === 'string' && orderNote.contains(skipTag);
+    };
+
+    const ordersToSkip = this.shopifyOrders.filter(orderShallBeSkipped);
+    ordersToSkip.forEach((order) => {
+      slack.log(`Order was NOT send to Wolanski.\nOrder ID: ${order.name}\nName on shipment: ${order.shipping_address.name}\nComment in order: ${order.note}`);
+    });
+
+    this.shopifyOrders = this.shopifyOrders.filter(order => !orderShallBeSkipped(order));
   }
 
   async trigger(event) {
