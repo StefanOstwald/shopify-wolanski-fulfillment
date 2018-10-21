@@ -13,7 +13,9 @@ export class WorkflowNewOrderUpload {
     this.csvFileData = '';
     this.csvFilePathOnDisk = '/tmp/newOrders-temp.csv';
     this.wolanskiOrders = [];
-    this.shopifyOrders = [];
+    this.allShopifyOrders = [];
+    this.orderToSkip = [];
+    this.fulfillmentShopifyOrders = [];
     this.codeInCommentToNotFulfillOrder = process.env.removeOrderWhichAreFlaggedToBeSkipped || '#dnf#';
   }
 
@@ -25,7 +27,9 @@ export class WorkflowNewOrderUpload {
     await this.writeCsvToFileOnDisk();
     await this.uploadFileToFtp();
     await this.deleteFileOnDisk();
+    this.logOrdersToSlack();
   }
+
 
   removeOrderWhichAreFlaggedToBeSkipped() {
     const orderShallBeSkipped = (order) => {
@@ -34,12 +38,8 @@ export class WorkflowNewOrderUpload {
       return typeof order.note === 'string' && orderNote.contains(skipTag);
     };
 
-    const ordersToSkip = this.shopifyOrders.filter(orderShallBeSkipped);
-    ordersToSkip.forEach((order) => {
-      slack.log(`Order was NOT send to Wolanski.\nOrder ID: ${order.name}\nName on shipment: ${order.shipping_address.name}\nComment in order: ${order.note}`);
-    });
-
-    this.shopifyOrders = this.shopifyOrders.filter(order => !orderShallBeSkipped(order));
+    this.orderToSkip = this.allShopifyOrders.filter(orderShallBeSkipped);
+    this.fulfillmentShopifyOrders = this.allShopifyOrders.filter(order => !orderShallBeSkipped(order));
   }
 
   async trigger(event) {
@@ -64,15 +64,15 @@ export class WorkflowNewOrderUpload {
   async queryOrders() {
     const timeKeeper = new OrderUploadTimeKeeper();
     const shopify = new Shopify();
-    this.shopifyOrders = await shopify.getOrdersInTimespane(
+    this.allShopifyOrders = await shopify.getOrdersInTimespane(
       timeKeeper.previousTimeIntervallStart(),
       timeKeeper.previousTimeIntervallEnd()
     );
-    console.log(`this.shopifyOrders count: ${this.shopifyOrders.length}`);
+    console.log(`this.allShopifyOrders count: ${this.allShopifyOrders.length}`);
   }
 
   convertOrdersToWolanskiStyleArray() {
-    this.wolanskiOrders = convertShopifyOrdersToWolanskiStructure(this.shopifyOrders);
+    this.wolanskiOrders = convertShopifyOrdersToWolanskiStructure(this.fulfillmentShopifyOrders);
   }
 
   generateCsvFile() {
@@ -99,5 +99,40 @@ export class WorkflowNewOrderUpload {
 
   deleteFileOnDisk() {
     fs.unlinkSync(this.csvFilePathOnDisk);
+  }
+
+  logOrdersToSlack() {
+    const orderToLog = order => `
+    *${order.name}*
+    Shipping: ${order.shipping_address.name}; ${order.shipping_address.company}; ${order.shipping_address.address1}; ${order.shipping_address.address2}; ${order.shipping_address.zip}; ${order.shipping_address.city} 
+    Billing: ${order.billing_address.name}; ${order.billing_address.company}; ${order.billing_address.address1}; ${order.billing_address.address2}; ${order.billing_address.zip}; ${order.billing_address.city} 
+    Price: ${order.total_pice} ${order.currency}
+    Comment in order: ${order.note}
+    `;
+
+    const formatAsCode = str => `\`\`\` ${str} \`\`\``;
+
+    let log = `${this.wolanskiOrders.length} orders were sent to Wolanski.
+${this.orderToSkip.length} orders were skipped.`;
+
+    let code = '';
+    if (this.fulfillmentShopifyOrders.length > 0) {
+      code += 'Orders sent to Wolanski\n';
+      this.fulfillmentShopifyOrders.forEach((order) => {
+        code += orderToLog(order);
+      });
+    }
+    if (this.orderToSkip.length > 0) {
+      code += 'Orders skipped\n';
+      this.orderToSkip.forEach((order) => {
+        code += orderToLog(order);
+      });
+    }
+
+    if (code) {
+      log += `\n${formatAsCode(code)}`;
+    }
+
+    slack.log(log);
   }
 }
