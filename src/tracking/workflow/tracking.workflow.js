@@ -27,7 +27,7 @@ export class WorkflowTracking {
       return;
     }
     await this.loadTrackingInfo();
-    await this.updateShopifyWithTrackingInfo();
+    await this.updateShopifyWithAllTrackingInfos();
     await this.deleteFileOnDisk();
   }
 
@@ -49,16 +49,21 @@ export class WorkflowTracking {
     this.trackingInfos = csvTrackingParser.getTrackingInfos();
   }
 
-  async updateShopifyWithTrackingInfo() {
-    const promises = [];
-    this.trackingInfos.forEach((trackingInfo, index) => {
-      if (!trackingInfo.shopifyOrderId) {
-        slack.error(`ShopifyOrder is missing in row ${index}. The order has not been updated.\ntrackingInfo: ${JSON.stringify(trackingInfo, null, 2)}`);
-        return;
+  async updateShopifyWithAllTrackingInfos() {
+    for (let iRow = 0; iRow<this.trackingInfos.length; iRow++ ) {
+      const iTrackingInfo = this.trackingInfos[iRow];
+      
+      if (!iTrackingInfo.shopifyOrderId) {
+        slack.error(`ShopifyOrder is missing in row ${iRow}. The order has not been updated.\ntrackingInfo: ${JSON.stringify(iTrackingInfo, null, 2)}`);
+        continue;
       }
-      promises.push(this.shopify.addFulfillmentToOrder(trackingInfo));
-    });
-    return Promise.all(promises);
+
+      try {
+        await this.shopify.addFulfillmentToOrder(iTrackingInfo);
+      } catch (err) {
+        slack.error(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
+      }
+    }
   }
 
   async triggerSafely(event) {
