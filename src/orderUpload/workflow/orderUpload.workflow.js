@@ -35,7 +35,7 @@ export class WorkflowNewOrderUpload {
     const orderShallBeSkipped = (order) => {
       const skipTag = this.codeInCommentToNotFulfillOrder.toLowerCase();
       const orderNote = order.note.toLowerCase();
-      return typeof order.note === 'string' && orderNote.contains(skipTag);
+      return typeof order.note === 'string' && orderNote.includes(skipTag);
     };
 
     this.orderToSkip = this.allShopifyOrders.filter(orderShallBeSkipped);
@@ -106,7 +106,7 @@ export class WorkflowNewOrderUpload {
     *${order.name}*
     Shipping: ${order.shipping_address.name}; ${order.shipping_address.company}; ${order.shipping_address.address1}; ${order.shipping_address.address2}; ${order.shipping_address.zip}; ${order.shipping_address.city} 
     Billing: ${order.billing_address.name}; ${order.billing_address.company}; ${order.billing_address.address1}; ${order.billing_address.address2}; ${order.billing_address.zip}; ${order.billing_address.city} 
-    Price: ${order.total_pice} ${order.currency}
+    Price: ${order.total_price} ${order.currency}
     Comment in order: ${order.note}
     `;
 

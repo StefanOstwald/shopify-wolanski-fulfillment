@@ -50,9 +50,9 @@ export class WorkflowTracking {
   }
 
   async updateShopifyWithAllTrackingInfos() {
-    for (let iRow = 0; iRow<this.trackingInfos.length; iRow++ ) {
+    for (let iRow = 0; iRow < this.trackingInfos.length; iRow++) {
       const iTrackingInfo = this.trackingInfos[iRow];
-      
+
       if (!iTrackingInfo.shopifyOrderId) {
         slack.error(`ShopifyOrder is missing in row ${iRow}. The order has not been updated.\ntrackingInfo: ${JSON.stringify(iTrackingInfo, null, 2)}`);
         continue;
@@ -61,7 +61,7 @@ export class WorkflowTracking {
       try {
         await this.shopify.addFulfillmentToOrder(iTrackingInfo);
       } catch (err) {
-        slack.error(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
+        slack.error(`### Error ###\nVerify the order at https://innoki-shop.myshopify.com/admin/orders/${iTrackingInfo.shopifyOrderId}\nmessage: ${err.message};\nstack: ${err.stack}`);
       }
     }
   }
