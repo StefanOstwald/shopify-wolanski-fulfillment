@@ -34,7 +34,7 @@ export class WorkflowNewOrderUpload {
   removeOrderWhichAreFlaggedToBeSkipped() {
     const orderShallBeSkipped = (order) => {
       const skipTag = this.codeInCommentToNotFulfillOrder.toLowerCase();
-      const orderNote = order.note.toLowerCase();
+      const orderNote = order.note.toLowerCase() || '';
       return typeof order.note === 'string' && orderNote.includes(skipTag);
     };
 

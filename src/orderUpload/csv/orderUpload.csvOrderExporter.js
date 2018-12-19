@@ -42,7 +42,7 @@ export class CsvOrderExporter {
         return;
       }
 
-      const valueContainsSubattributes = typeof obj[key] === 'object' && Object.keys(obj[key]).length > 0;
+      const valueContainsSubattributes = (typeof obj[key] === 'object') && (obj[key] !== null) && (Object.keys(obj[key]).length > 0);
       if (valueContainsSubattributes) {
         obj[key] = CsvOrderExporter.replaceUnallowedCharsInAllStringsWithReplacer(obj[key], delimiter, replacer);
       }
