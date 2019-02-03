@@ -1,6 +1,7 @@
 import json2csv from 'json2csv';
 import { getLocalTime } from '../../util/timeHelper';
 import { getEmptyOrder } from './orderUpload.shopifyToWolanski';
+import { slack } from '../../util/slack';
 
 export class CsvOrderExporter {
   constructor() {
@@ -10,11 +11,17 @@ export class CsvOrderExporter {
   }
 
   removeDelimiterFromCsvStrings() {
-    this.orders = CsvOrderExporter.replaceUnallowedCharsInAllStringsWithReplacer(
-      this.orders,
-      this.delimiter,
-      this.delimiterInStringReplacer
-    );
+    try {
+      this.orders = CsvOrderExporter.replaceUnallowedCharsInAllStringsWithReplacer(
+        this.orders,
+        this.delimiter,
+        this.delimiterInStringReplacer
+      );
+    } catch (err) {
+      console.log(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
+      console.log(`this.orders: ${JSON.stringify(this.orders, null, 2)}`);
+      slack.error('removeDelimiterFromCsvStrings failed. The order was processed without the filtering');
+    }
   }
 
   genCsv() {
@@ -42,7 +49,7 @@ export class CsvOrderExporter {
         return;
       }
 
-      const valueContainsSubattributes = (typeof obj[key] === 'object') && (obj[key] !== null) && (Object.keys(obj[key]).length > 0);
+      const valueContainsSubattributes = (!!obj[key]) && (obj[key] !== undefined) && (obj[key] !== null) && (typeof obj[key] === 'object') && (Object.keys(obj[key]).length > 0);
       if (valueContainsSubattributes) {
         obj[key] = CsvOrderExporter.replaceUnallowedCharsInAllStringsWithReplacer(obj[key], delimiter, replacer);
       }

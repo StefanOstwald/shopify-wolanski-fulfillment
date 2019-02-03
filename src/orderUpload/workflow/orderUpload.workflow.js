@@ -57,6 +57,10 @@ export class WorkflowNewOrderUpload {
       return await this.trigger(event);
     } catch (err) {
       slack.error(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
+      console.log(`this.wolanskiOrders: ${JSON.stringify(this.wolanskiOrders, null, 2)}`);
+      console.log(`this.allShopifyOrders: ${JSON.stringify(this.allShopifyOrders, null, 2)}`);
+      console.log(`this.orderToSkip: ${JSON.stringify(this.orderToSkip, null, 2)}`);
+      console.log(`this.fulfillmentShopifyOrders: ${JSON.stringify(this.fulfillmentShopifyOrders, null, 2)}`);
       throw err;
     }
   }
