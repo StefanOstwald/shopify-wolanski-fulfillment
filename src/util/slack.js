@@ -28,6 +28,17 @@ class Slack {
   static getErrorUrl() {
     return process.env.SLACK_ERROR_URL;
   }
+  warn(txt) {
+    console.log(`error: ${JSON.stringify(txt, null, 2)}`);
+    const url = Slack.getWarningUrl();
+    const request = Slack.postTextToSlackUrlSafely(txt, url);
+    this.queries.push(request);
+    return request;
+  }
+
+  static getWarningUrl() {
+    return process.env.SLACK_WARNING_URL;
+  }
 
   getActivePromise() {
     return Promise.all(this.queries);

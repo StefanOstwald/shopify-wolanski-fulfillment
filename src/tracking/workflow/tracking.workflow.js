@@ -54,14 +54,14 @@ export class WorkflowTracking {
       const iTrackingInfo = this.trackingInfos[iRow];
 
       if (!iTrackingInfo.shopifyOrderId) {
-        slack.error(`ShopifyOrder is missing in row ${iRow}. The order has not been updated.\ntrackingInfo: ${JSON.stringify(iTrackingInfo, null, 2)}`);
+        slack.warn(`ShopifyOrder is missing in row ${iRow}. The order has not been updated.\ntrackingInfo: ${JSON.stringify(iTrackingInfo, null, 2)}`);
         continue;
       }
 
       try {
         await this.shopify.addFulfillmentToOrder(iTrackingInfo);
       } catch (err) {
-        slack.error(`### Error ###\nVerify the order at https://innoki-shop.myshopify.com/admin/orders/${iTrackingInfo.shopifyOrderId}\nmessage: ${err.message};\nstack: ${err.stack}`);
+        slack.warn(`### Error ###\nVerify the order at https://innoki-shop.myshopify.com/admin/orders/${iTrackingInfo.shopifyOrderId}\nmessage: ${err.message};\nstack: ${err.stack}`);
       }
     }
   }
@@ -70,7 +70,7 @@ export class WorkflowTracking {
     try {
       return await this.trigger(event);
     } catch (err) {
-      slack.error(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
+      slack.warn(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
       throw err;
     }
   }

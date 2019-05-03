@@ -43,6 +43,9 @@
         "asyncArrow": "always"
       }
     ],
-  "no-use-before-define":"off"
+    "no-use-before-define":"off",
+    "no-plusplus":"off",
+    "no-continue":"off",
+    "no-await-in-loop":"warn"
   }
 }
