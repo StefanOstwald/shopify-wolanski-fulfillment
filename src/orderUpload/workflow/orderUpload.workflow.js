@@ -16,7 +16,7 @@ export class WorkflowNewOrderUpload {
     this.allShopifyOrders = [];
     this.orderToSkip = [];
     this.fulfillmentShopifyOrders = [];
-    this.codeInCommentToNotFulfillOrder = process.env.removeOrderWhichAreFlaggedToBeSkipped || '#dnf#';
+    this.codeInCommentToNotFulfillOrder = process.env.ORDER_UPLOAD_CODE_IN_COMMENT_TO_NOT_FULFILL_ORDER || '#dnf#';
   }
 
   async executeWorkflow() {
