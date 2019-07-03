@@ -66,7 +66,9 @@ function generateWolanskiOrderFromShopifyOrder(sOrder, wolanskiOrderIndex) {
     wOrder.T_LKZ = sOrder.shipping_address.country_code;
   }
   wOrder.PLZ = sOrder.shipping_address.zip;
-  wOrder.Strasse = sOrder.shipping_address.address1;
+  wOrder.Strasse = sOrder.shipping_address.address2 ?
+    `${sOrder.shipping_address.address1} - ${sOrder.shipping_address.address2}` :
+    sOrder.shipping_address.address1;
   wOrder.T_Ort = sOrder.shipping_address.city;
   wOrder.Reserve = sOrder.id;
 

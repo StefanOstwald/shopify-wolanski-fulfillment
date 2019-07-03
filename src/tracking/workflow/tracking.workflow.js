@@ -47,6 +47,7 @@ export class WorkflowTracking {
     const csvTrackingParser = new CsvTrackingParser();
     await csvTrackingParser.parseString(this.csvString);
     this.trackingInfos = csvTrackingParser.getTrackingInfos();
+    console.log(`this.trackingInfos: ${JSON.stringify(this.trackingInfos, null, 2)}`);
   }
 
   async updateShopifyWithAllTrackingInfos() {

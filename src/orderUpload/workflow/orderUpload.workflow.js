@@ -77,6 +77,7 @@ export class WorkflowNewOrderUpload {
 
   convertOrdersToWolanskiStyleArray() {
     this.wolanskiOrders = convertShopifyOrdersToWolanskiStructure(this.fulfillmentShopifyOrders);
+    console.log(`this.wolanskiOrders: ${JSON.stringify(this.wolanskiOrders, null, 2)}`);
   }
 
   generateCsvFile() {
