@@ -1,8 +1,6 @@
 import moment from 'moment-timezone';
 import fs from 'fs';
-import { WolanskiFtp } from '../../util/ftp';
 import { WorkflowTracking } from './tracking.workflow';
-import { TrackingTimeKeeper } from '../timeKeeper/orderUpload.timeKeeper';
 
 describe('WorkflowNewOrderUpload', () => {
   let env;
@@ -66,7 +64,7 @@ describe('WorkflowNewOrderUpload', () => {
           location_id: shopifyLocationId,
           tracking_number: '321049432755',
           tracking_urls: [
-            'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=321049432755',
+            'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=321049432711',
           ],
           notify_customer: informCustomerAboutTrackingInfo,
         },

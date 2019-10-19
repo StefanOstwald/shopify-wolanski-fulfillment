@@ -1,4 +1,5 @@
 import csvtojson from 'csvtojson';
+import { slack } from '../../util/slack';
 
 export class CsvTrackingParser {
   constructor() {
@@ -12,11 +13,16 @@ export class CsvTrackingParser {
   getTrackingInfos() {
     const trackingInfos = [];
     this.parsedCsv.forEach((trackingInfo) => {
-      trackingInfos.push({
-        shopifyOrderId: trackingInfo.Durchreichefeld,
-        trackingUrl: trackingInfo.Sendungsverfolgung || null,
-        trackingNumber: trackingInfo.PaketNr,
-      });
+      try {
+        const reserveFieldFromShoppingCSV = JSON.parse(trackingInfo.Durchreichefeld);
+        trackingInfos.push({
+          shopifyOrderId: reserveFieldFromShoppingCSV.shopifyOrderId,
+          trackingUrl: trackingInfo.Sendungsverfolgung || null,
+          trackingNumber: trackingInfo.PaketNr,
+        });
+      } catch (err) {
+        slack.warn(`### Error ###\nmessage: ${err.message};\nstack: ${err.stack}`);
+      }
     });
     return trackingInfos;
   }
