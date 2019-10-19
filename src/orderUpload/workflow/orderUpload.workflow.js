@@ -93,9 +93,16 @@ export class WorkflowNewOrderUpload {
   async uploadFileToFtp() {
     const ftp = new WolanskiFtp();
     await ftp.connect();
-    const ftpRootPath = process.env.WOLANSKI_FTP_ORDER_UPLOAD_PATH || '/';
-    await ftp.uploadFile(this.csvFilePathOnDisk, ftpRootPath + this.csvNameOnFtp);
-    await ftp.disconnect();
+
+    const ftpOrderUploadPath = process.env.WOLANSKI_FTP_ORDER_UPLOAD_PATH || '/';
+    await ftp.uploadFile(this.csvFilePathOnDisk, ftpOrderUploadPath + this.csvNameOnFtp);
+
+    const ftpOrderUploadBackupPath = process.env.WOLANSKI_FTP_ORDER_UPLOAD_BACKUP_PATH;
+    if (ftpOrderUploadBackupPath) {
+      await ftp.uploadFile(this.csvFilePathOnDisk, ftpOrderUploadBackupPath + this.csvNameOnFtp);
+    }
+
+    ftp.disconnect();
   }
 
   writeCsvToFileOnDisk() {
