@@ -70,7 +70,7 @@ function generateWolanskiOrderFromShopifyOrder(sOrder, wolanskiOrderIndex) {
     `${sOrder.shipping_address.address1} - ${sOrder.shipping_address.address2}` :
     sOrder.shipping_address.address1;
   wOrder.T_Ort = sOrder.shipping_address.city;
-  wOrder.Reserve = JSON.stringify({ shopifyOrderId: sOrder.id });
+  wOrder.Reserve = `shopifyOrderId:${sOrder.id}`;
 
   const comments = [];
   if (orderIsExpressDelivery(sOrder)) {

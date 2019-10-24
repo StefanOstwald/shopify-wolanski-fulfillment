@@ -14,9 +14,11 @@ export class CsvTrackingParser {
     const trackingInfos = [];
     this.parsedCsv.forEach((trackingInfo) => {
       try {
-        const reserveFieldFromShoppingCSV = JSON.parse(trackingInfo.Durchreichefeld);
+        const shopifyOrderId = typeof trackingInfo.Durchreichefeld === 'string' ?
+          trackingInfo.Durchreichefeld.replace('shopifyOrderId:', '') : trackingInfo.Durchreichefeld;
+
         trackingInfos.push({
-          shopifyOrderId: reserveFieldFromShoppingCSV.shopifyOrderId,
+          shopifyOrderId,
           trackingUrl: trackingInfo.Sendungsverfolgung || null,
           trackingNumber: trackingInfo.PaketNr,
         });
