@@ -114,10 +114,15 @@ export class WorkflowNewOrderUpload {
   }
 
   logOrdersToSlack() {
+    const addressToString = address => {
+      if (!address) return "Shopify order contains no address"
+      return `${address.name}; ${address.company}; ${address.address1}; ${address.address2}; ${address.zip}; ${address.city} `;
+    }  
+
     const orderToLog = order => `
     *${order.name}*
-    Shipping: ${order.shipping_address.name}; ${order.shipping_address.company}; ${order.shipping_address.address1}; ${order.shipping_address.address2}; ${order.shipping_address.zip}; ${order.shipping_address.city} 
-    Billing: ${order.billing_address.name}; ${order.billing_address.company}; ${order.billing_address.address1}; ${order.billing_address.address2}; ${order.billing_address.zip}; ${order.billing_address.city} 
+    Shipping: ${addressToString(order.shipping_address)}
+    Billing: ${addressToString(order.billing_address)}
     Price: ${order.total_price} ${order.currency}
     Comment in order: ${order.note}
     `;
