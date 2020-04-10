@@ -29,7 +29,7 @@ Please note that the .env file itself will not (!) get deployed, so make sure to
 
 ## Test
 For development a .env file can be used for all env varialbes. An example setting is provided in .env-example. To get started with the default setting rename .env-example to .env and replace the variables with your own settings.
-> rn ./.env-example ./.env
+> cp example.env .env
 
 Once your .env file configured tests can be started via 
 > npm test
