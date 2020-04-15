@@ -47,10 +47,11 @@ export function getEmptyOrder() {
 }
 
 
-function orderIsExpressDelivery(order) {
-  if (Array.isArray(order.shipping_lines)) {
+export function orderIsExpressDelivery(order) {
+  if (!Array.isArray(order.shipping_lines)) {
     return false;
   }
+  
   const shippingLineIsExpress = iShippingLine => iShippingLine.title === process.env.SHOPIFY_EXPRESS_DELIVERY_NAME;
   const expressShippingLine = order.shipping_lines.find(shippingLineIsExpress);
   return !!expressShippingLine;
@@ -58,6 +59,7 @@ function orderIsExpressDelivery(order) {
 
 
 function generateWolanskiOrderFromShopifyOrder(sOrder, wolanskiOrderIndex) {
+  
   const wOrder = getEmptyOrder();
   wOrder.T_Nummer = wolanskiOrderIndex;
   wOrder.T_Name1 = sOrder.shipping_address.name;
@@ -67,20 +69,21 @@ function generateWolanskiOrderFromShopifyOrder(sOrder, wolanskiOrderIndex) {
   }
   wOrder.PLZ = sOrder.shipping_address.zip;
   wOrder.Strasse = sOrder.shipping_address.address2 ?
-    `${sOrder.shipping_address.address1} - ${sOrder.shipping_address.address2}` :
-    sOrder.shipping_address.address1;
+  `${sOrder.shipping_address.address1} - ${sOrder.shipping_address.address2}` :
+  sOrder.shipping_address.address1;
   wOrder.T_Ort = sOrder.shipping_address.city;
   wOrder.Reserve = `shopifyOrderId:${sOrder.id}`;
-
+  
   const comments = [];
   if (orderIsExpressDelivery(sOrder)) {
-    comments.push('## Express Versands ##');
-  }
+    console.log('generateWolanskiOrderFromShopifyOrder - express');
+    comments.push('## Express Versand ##');
+  } else console.log('generateWolanskiOrderFromShopifyOrder - no express');
   if (sOrder.note) {
     comments.push(sOrder.note);
   }
   wOrder.T_Bemerkung1 = comments.join('/n');
-
+  
   _.forEach(sOrder.line_items, (lineItem, lineItemIndex) => {
     wOrder[`T_Artikel ${lineItemIndex}`] = lineItem.sku;
     wOrder[`T_Menge ${lineItemIndex}`] = lineItem.quantity;

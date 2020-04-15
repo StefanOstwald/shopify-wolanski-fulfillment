@@ -1,5 +1,6 @@
 import { WorkflowNewOrderUpload } from './orderUpload.workflow';
 import { getEmptyOrder } from '../csv/orderUpload.shopifyToWolanski';
+import { expressDeliveryOrder } from '../test/orderFixtures';
 
 require('dotenv').config();
 
@@ -8,12 +9,16 @@ describe('workflow', () => {
     const workflow = new WorkflowNewOrderUpload();
     await workflow.executeWorkflow();
   }, 10000);
+
+
+  describe("correctly adds Express Delivery to comment", () => {
+    const workflow = new WorkflowNewOrderUpload();
+    workflow.allShopifyOrders = [expressDeliveryOrder];
+
+    workflow.removeOrderWhichAreFlaggedToBeSkipped();
+    workflow.convertOrdersToWolanskiStyleArray();
+    workflow.generateCsvFile();
+  
+    expect(workflow.csvFileData.includes('## Express Versand ##')).toBeTruthy();
+  });
 });
-
-
-function genTestOrderForEncoding() {
-  const testOrder = getEmptyOrder();
-  testOrder.T_Name1 = 'no encoding';
-  testOrder.T_Name2 = 'ae ä, Ae Ä, ue ü, Ue Ü, oe ö, Oe Ö, ss ß, Fragezeichen ?, Gleich =, add @, Euro €, Anführungszeichen unten „, Anführungzeichen oben “, Schreibmaschinen Anführungszeichen ", Strichpunkt (sollte gelöscht sein) ;, Doppelpunkt :, slash /, backslash \\, pipe |, a, cedille ç, a Accent grave à';
-  this.wolanskiOrders.push(testOrder);
-}

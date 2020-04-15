@@ -4,13 +4,6 @@ import { OrderUploadTimeKeeper } from './orderUpload.timeKeeper';
 require('dotenv').config();
 
 describe('timeKeeper', () => {
-  test('previousTimeIntervallEnd', async () => {
-    console.log(`previousTimeIntervallEnd:${console.log(new OrderUploadTimeKeeper().previousTimeIntervallEnd())}`);
-  });
-
-  test('previousTimeIntervallStart', async () => {
-    console.log(`previousTimeIntervallEnd:${console.log(new OrderUploadTimeKeeper().previousTimeIntervallStart())}`);
-  });
 
   test('moment works with timezone like in the example', () => {
     const june = moment('2014-06-01T12:00:00Z');

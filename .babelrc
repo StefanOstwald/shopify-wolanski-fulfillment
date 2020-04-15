@@ -12,5 +12,7 @@
         "regenerator": true
       }
     ]
-  ]
+  ],
+  "retainLines": true,
+  "sourceMaps": "inline"
 }
