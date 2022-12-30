@@ -28,7 +28,7 @@
     "dotenv": "^4.0.0",
     "https-proxy-agent": "^2.2.4",
     "i18next": "^8.2.1",
-    "json2csv": "^3.11.2",
+    "json2csv": "^5.0.7",
     "lodash": "^4.17.19",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.13",
